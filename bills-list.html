@@ -24,6 +24,9 @@
         .badge-paid { background-color: #ecfdf5; color: #059669; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
         .badge-pending { background-color: #fffbeb; color: #d97706; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
         .badge-overdue { background-color: #fff1f2; color: #e11d48; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
+        
+        .btn-delete { background-color: #fff1f2; color: #e11d48; border: none; padding: 8px 12px; border-radius: 8px; transition: all 0.2s ease; }
+        .btn-delete:hover { background-color: #ffe4e6; color: #be123c; transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -86,6 +89,7 @@
                             <th>Amount</th>
                             <th>Due Date</th>
                             <th>Status</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
@@ -96,7 +100,6 @@
     </div>
 
     <script>
-        // LOGIK SINKRONISASI: MASUKKAN BACKUP HANYA JIKA LOCALSTORAGE BETUL-BETUL KOSONG
         function initDataIfEmptyInList() {
             const currentData = localStorage.getItem("storedBills");
             if (!currentData || JSON.parse(currentData).length === 0) {
@@ -135,6 +138,7 @@
             tbody.innerHTML = "";
 
             bills.forEach(bill => {
+                let bId = bill.id;
                 let bName = bill.name || bill.billName || "New Bill";
                 let bProvider = bill.provider || bill.category || "General";
                 let bAmount = parseFloat(bill.amount || bill.billAmount) || 0;
@@ -167,6 +171,11 @@
                             <td class="fw-bold">RM ${bAmount.toFixed(2)}</td>
                             <td class="text-secondary">${bDate}</td>
                             <td><span class="${badgeClass}">${bStatus}</span></td>
+                            <td class="text-center">
+                                <button class="btn btn-delete animate-btn" onclick="deleteBill('${bId}')">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </td>
                         </tr>
                     `;
                     tbody.innerHTML += row;
@@ -174,7 +183,18 @@
             });
 
             if (tbody.innerHTML === "") {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No bills found for this period.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">No bills found for this period.</td></tr>`;
+            }
+        }
+
+        function deleteBill(billId) {
+            if (confirm("Are you sure you want to delete this bill?")) {
+                let bills = JSON.parse(localStorage.getItem("storedBills")) || [];
+                // Buang bil yang sepadan dengan ID
+                bills = bills.filter(bill => bill.id !== billId);
+                localStorage.setItem("storedBills", JSON.stringify(bills));
+                // Reload table balik
+                renderBillsTable();
             }
         }
 
