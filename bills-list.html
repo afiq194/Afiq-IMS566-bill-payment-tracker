@@ -18,6 +18,9 @@
         .table-custom th { font-weight: 600; color: #64748b; background-color: #f8fafc; border: none; padding: 16px; }
         .table-custom td { padding: 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; }
         
+        .btn-add-bill { background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; font-weight: 600; border: none; padding: 10px 20px; border-radius: 12px; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2); }
+        .btn-add-bill:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); color: white; transform: translateY(-2px); box-shadow: 0 6px 12px -1px rgba(99, 102, 241, 0.3); }
+        
         .badge-paid { background-color: #ecfdf5; color: #059669; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
         .badge-pending { background-color: #fffbeb; color: #d97706; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
         .badge-overdue { background-color: #fff1f2; color: #e11d48; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
@@ -60,7 +63,9 @@
                     <h2 class="fw-bold mb-1">My Bills</h2>
                     <p class="text-muted small mb-0">Manage and track all your logged utilities.</p>
                 </div>
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-3">
+                    <a href="add-new-bill.html" class="btn btn-add-bill shadow-sm"><i class="fa-solid fa-plus"></i> Add New Bill</a>
+                    
                     <select class="form-select rounded-3 shadow-sm w-auto" id="listPeriodFilter" onchange="renderBillsTable()">
                         <option value="annual" selected>Annual Summary (Jan-May 2026)</option>
                         <option value="current">Current Month (May 2026)</option>
@@ -91,7 +96,38 @@
     </div>
 
     <script>
+        // LOGIK SINKRONISASI: MASUKKAN BACKUP HANYA JIKA LOCALSTORAGE BETUL-BETUL KOSONG
+        function initDataIfEmptyInList() {
+            const currentData = localStorage.getItem("storedBills");
+            if (!currentData || JSON.parse(currentData).length === 0) {
+                const freshBackup = [
+                    { id: "b1", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
+                    { id: "b2", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
+                    { id: "b3", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "May 28, 2026", period: "current", status: "Paid" },
+                    { id: "b4", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "May 01, 2026", period: "current", status: "Paid" },
+                    { id: "b5", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
+                    { id: "b6", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
+                    { id: "b7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
+                    { id: "b8", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
+                    { id: "b9", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
+                    { id: "b10", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
+                    { id: "b11", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
+                    { id: "b12", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
+                    { id: "b13", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
+                    { id: "b14", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
+                    { id: "b15", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
+                    { id: "b16", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
+                    { id: "b17", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
+                    { id: "b18", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" },
+                    { id: "b19", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
+                    { id: "b20", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
+                ];
+                localStorage.setItem("storedBills", JSON.stringify(freshBackup));
+            }
+        }
+
         function renderBillsTable() {
+            initDataIfEmptyInList();
             const bills = JSON.parse(localStorage.getItem("storedBills")) || [];
             const selectedPeriod = document.getElementById("listPeriodFilter").value;
             const tbody = document.getElementById("billsTableBody");
