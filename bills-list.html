@@ -69,9 +69,9 @@
                 <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="periodFilter" onchange="renderTableAndCards()">
                     <option value="current">Current Month (May 2026)</option>
                     <option value="previous">Previous Month (April 2026)</option>
-                    <option value="Jan">January 2026</option>
-                    <option value="Feb">February 2026</option>
                     <option value="Mar">March 2026</option>
+                    <option value="Feb">February 2026</option>
+                    <option value="Jan">January 2026</option>
                     <option value="annual">Annual Summary (Jan-May 2026)</option>
                 </select>
             </div>
@@ -159,20 +159,21 @@
                 </div>
                 <form id="addBillForm">
                     <div class="modal-body">
-                        <div class="mb-3"><label class="form-label small fw-semibold text-secondary">Bill Name</label><input type="text" class="form-control rounded-3" id="newBillName" placeholder="" required></div>
-                        <div class="mb-3"><label class="form-label small fw-semibold text-secondary">Provider / Category</label><input type="text" class="form-control rounded-3" id="newBillProvider" placeholder="" required></div>
+                        <div class="mb-3"><label class="form-label small fw-semibold text-secondary">Bill Name</label><input type="text" class="form-control rounded-3" id="newBillName" required></div>
+                        <div class="mb-3"><label class="form-label small fw-semibold text-secondary">Provider / Category</label><input type="text" class="form-control rounded-3" id="newBillProvider" required></div>
                         <div class="row">
                             <div class="col-md-6 mb-3"><label class="form-label small fw-semibold text-secondary">Amount (RM)</label><input type="number" step="0.01" class="form-control rounded-3" id="newBillAmount" required></div>
                             <div class="col-md-6 mb-3"><label class="form-label small fw-semibold text-secondary">Due Date</label><input type="date" class="form-control rounded-3" id="newBillDate" required></div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-semibold text-secondary">Target Month Period</label>
-                            <select class="form-select rounded-3" id="newBillPeriod">
-                                <option value="current">May 2026</option>
-                                <option value="previous">April 2026</option>
-                                <option value="Jan">January 2026</option>
-                                <option value="Feb">February 2026</option>
+                            <select class="form-select rounded-3 shadow-sm" id="newBillPeriod">
+                                <option value="current">Current Month (May 2026)</option>
+                                <option value="previous">Previous Month (April 2026)</option>
                                 <option value="Mar">March 2026</option>
+                                <option value="Feb">February 2026</option>
+                                <option value="Jan">January 2026</option>
+                                <option value="annual">Annual Summary (Jan-May 2026)</option>
                             </select>
                         </div>
                         <div class="mb-2">
