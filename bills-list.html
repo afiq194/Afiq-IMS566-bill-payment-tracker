@@ -13,17 +13,14 @@
         .navbar-custom .navbar-brand { color: #0f172a; font-weight: 700; }
         .navbar-custom .nav-link { color: #64748b; font-weight: 500; }
         .navbar-custom .nav-link.active { color: #6366f1 !important; }
-        .card-aesthetic { border-radius: 20px; border: none; }
-        .table-premium th { background-color: #f1f5f9; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 12px; padding: 16px; }
-        .table-premium td { padding: 16px; vertical-align: middle; color: #334155; font-size: 14px; }
-        .status-badge { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-block; }
-        .badge-paid { background-color: #eef2ff; color: #6366f1; }
-        .badge-pending { background-color: #fffbeb; color: #d97706; }
-        .badge-overdue { background-color: #fff1f2; color: #e11d48; }
-        .bg-gradient-purp { background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; }
-        .bg-gradient-orange { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
-        .bg-gradient-rose { background: linear-gradient(135deg, #f43f5e, #e11d48); color: white; }
-        .toast-container-custom { position: fixed; bottom: 20px; right: 20px; z-index: 1050; }
+        
+        .card-custom { border-radius: 24px; border: none; background-color: #ffffff; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .table-custom th { font-weight: 600; color: #64748b; background-color: #f8fafc; border: none; padding: 16px; }
+        .table-custom td { padding: 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; }
+        
+        .badge-paid { background-color: #ecfdf5; color: #059669; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
+        .badge-pending { background-color: #fffbeb; color: #d97706; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
+        .badge-overdue { background-color: #fff1f2; color: #e11d48; border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -38,7 +35,7 @@
     <nav class="navbar navbar-expand-lg navbar-custom py-3 mb-5 shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
-                <span class="text-primary me-2"><i class="fa-solid fa-lightning-charge"></i></span> Bill Payment Tracker
+                Bill Payment Tracker
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -57,71 +54,27 @@
     </nav>
 
     <div class="container">
-        <div class="row mb-4 align-items-center">
-            <div class="col-md-5">
-                <span class="badge px-3 py-2 rounded-pill mb-2 fw-semibold" style="background-color: #eef2ff; color: #6366f1;">Data Management</span>
-                <h2 class="fw-bold">Tracked Bills Statement</h2>
-                <p class="text-muted mb-0">A detailed view of all active bills, subscriptions, and statements.</p>
-            </div>
-            
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <label class="small fw-bold text-secondary me-2">Statement Period:</label>
-                <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="periodFilter" onchange="renderTableAndCards()">
-                    <option value="current">Current Month (May 2026)</option>
-                    <option value="previous">Previous Month (April 2026)</option>
-                    <option value="Mar">March 2026</option>
-                    <option value="Feb">February 2026</option>
-                    <option value="Jan">January 2026</option>
-                    <option value="annual">Annual Summary (Jan-May 2026)</option>
-                </select>
-            </div>
-
-            <div class="col-md-3 text-md-end mt-3 mt-md-0">
-                <button class="btn btn-dark rounded-3 px-4 py-2 fw-semibold shadow-sm" style="background-color: #1e293b;" data-bs-toggle="modal" data-bs-target="#addBillModal">
-                    <i class="fa-solid fa-plus me-2"></i> Add New Bill
-                </button>
-            </div>
-        </div>
-
-        <div class="row g-4 mb-4">
-            <div class="col-md-4">
-                <div class="card card-aesthetic shadow-sm bg-gradient-purp p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-white-50 small fw-bold text-uppercase mb-1" style="font-size: 11px;">Total Paid</p>
-                            <h4 class="fw-bold mb-0" id="cardPaid">RM 0.00</h4>
-                        </div>
-                        <div class="p-2.5 bg-white bg-opacity-10 rounded-3"><i class="fa-solid fa-circle-check text-white"></i></div>
-                    </div>
+        
+        <div class="card-custom shadow-sm mb-5">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1">My Bills</h2>
+                    <p class="text-muted small mb-0">Manage and track all your logged utilities.</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <select class="form-select rounded-3 shadow-sm w-auto" id="listPeriodFilter" onchange="renderBillsTable()">
+                        <option value="current">Current Month (May 2026)</option>
+                        <option value="previous">Previous Month (April 2026)</option>
+                        <option value="Mar">March 2026</option>
+                        <option value="Feb">February 2026</option>
+                        <option value="Jan">January 2026</option>
+                        <option value="annual">Annual Summary (Jan-May 2026)</option>
+                    </select>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card card-aesthetic shadow-sm bg-gradient-orange p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-white-50 small fw-bold text-uppercase mb-1" style="font-size: 11px;">Total Pending</p>
-                            <h4 class="fw-bold mb-0" id="cardPending">RM 0.00</h4>
-                        </div>
-                        <div class="p-2.5 bg-white bg-opacity-10 rounded-3"><i class="fa-solid fa-clock text-white"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card card-aesthetic shadow-sm bg-gradient-rose p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-white-50 small fw-bold text-uppercase mb-1" style="font-size: 11px;">Total Overdue</p>
-                            <h4 class="fw-bold mb-0" id="cardOverdue">RM 0.00</h4>
-                        </div>
-                        <div class="p-2.5 bg-white bg-opacity-10 rounded-3"><i class="fa-solid fa-triangle-exclamation text-white"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="card card-aesthetic shadow-sm overflow-hidden mb-5 bg-white">
             <div class="table-responsive">
-                <table class="table table-hover table-premium mb-0">
+                <table class="table table-custom align-middle">
                     <thead>
                         <tr>
                             <th>Bill Name</th>
@@ -129,178 +82,99 @@
                             <th>Amount</th>
                             <th>Due Date</th>
                             <th>Status</th>
-                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="billTableBody"></tbody>
+                    <tbody id="billsTableBody">
+                        </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 
-    <div class="toast-container-custom">
-        <div id="recoverToast" class="toast align-items-center text-white bg-dark border-0 rounded-3 p-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="fa-solid fa-trash-can text-danger me-2"></i> Bill entry has been deleted.
-                </div>
-                <button type="button" class="btn btn-warning btn-sm ms-auto me-2 rounded-2 fw-bold" onclick="recoverDeletedBill()">Undo</button>
-                <button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="addBillModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow-lg p-3">
-                <div class="modal-header border-0">
-                    <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>Add New Bill Entry</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form id="addBillForm">
-                    <div class="modal-body">
-                        <div class="mb-3"><label class="form-label small fw-semibold text-secondary">Bill Name</label><input type="text" class="form-control rounded-3" id="newBillName" required></div>
-                        <div class="mb-3"><label class="form-label small fw-semibold text-secondary">Provider / Category</label><input type="text" class="form-control rounded-3" id="newBillProvider" required></div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3"><label class="form-label small fw-semibold text-secondary">Amount (RM)</label><input type="number" step="0.01" class="form-control rounded-3" id="newBillAmount" required></div>
-                            <div class="col-md-6 mb-3"><label class="form-label small fw-semibold text-secondary">Due Date</label><input type="date" class="form-control rounded-3" id="newBillDate" required></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-secondary">Target Month Period</label>
-                            <select class="form-select rounded-3 shadow-sm" id="newBillPeriod">
-                                <option value="current">Current Month (May 2026)</option>
-                                <option value="previous">Previous Month (April 2026)</option>
-                                <option value="Mar">March 2026</option>
-                                <option value="Feb">February 2026</option>
-                                <option value="Jan">January 2026</option>
-                                <option value="annual">Annual Summary (Jan-May 2026)</option>
-                            </select>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label small fw-semibold text-secondary">Status</label>
-                            <select class="form-select rounded-3" id="newBillStatus">
-                                <option value="Pending">Pending</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Overdue">Overdue</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-light rounded-3 px-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-3 px-4 fw-semibold">Save Bill</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const defaultBills = [
+        const backupRealBills = [
             { id: 1, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
             { id: 2, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
-            { id: 3, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "May 28, 2026", period: "current", status: "Pending" },
-            { id: 4, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "May 01, 2026", period: "current", status: "Overdue" }
+            { id: 3, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "May 28, 2026", period: "current", status: "Paid" },
+            { id: 4, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "May 01, 2026", period: "current", status: "Paid" },
+            
+            { id: 5, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
+            { id: 6, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
+            { id: 7, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
+            { id: 8, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
+            
+            { id: 9, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
+            { id: 10, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
+            { id: 11, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
+            { id: 12, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
+            
+            { id: 13, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
+            { id: 14, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
+            { id: 15, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
+            { id: 16, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
+            
+            { id: 17, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
+            { id: 18, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" },
+            { id: 19, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
+            { id: 20, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
         ];
 
-        let lastDeletedBill = null;
-        let lastDeletedIndex = null;
+        localStorage.setItem("storedBills", JSON.stringify(backupRealBills));
 
-        if (!localStorage.getItem("storedBills")) {
-            localStorage.setItem("storedBills", JSON.stringify(defaultBills));
-        }
-
-        function renderTableAndCards() {
-            const selectedPeriod = document.getElementById("periodFilter").value;
-            const currentBills = JSON.parse(localStorage.getItem("storedBills")) || [];
-            const tableBody = document.getElementById("billTableBody");
+        function renderBillsTable() {
+            const bills = JSON.parse(localStorage.getItem("storedBills")) || [];
+            const selectedPeriod = document.getElementById("listPeriodFilter").value;
+            const tbody = document.getElementById("billsTableBody");
             
-            tableBody.innerHTML = ""; 
-            let totalPaid = 0, totalPending = 0, totalOverdue = 0;
+            tbody.innerHTML = "";
 
-            currentBills.forEach(bill => {
-                let shouldShow = (selectedPeriod === "annual" || bill.period === selectedPeriod);
-                let billAmount = parseFloat(bill.amount) || 0;
+            bills.forEach(bill => {
+                let shouldInclude = false;
+                
+                if (selectedPeriod === "annual") {
+                    shouldInclude = true;
+                } else if (bill.period) {
+                    const p = bill.period.toLowerCase();
+                    const s = selectedPeriod.toLowerCase();
+                    
+                    if (s === "current" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
+                    if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
+                    if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
+                    if (s === "feb" && (p.includes("feb") || p.includes("-02"))) shouldInclude = true;
+                    if (s === "mar" && (p.includes("mar") || p.includes("-03"))) shouldInclude = true;
+                }
 
-                if (shouldShow) {
-                    if (bill.status === "Paid") totalPaid += billAmount;
-                    if (bill.status === "Pending") totalPending += billAmount;
-                    if (bill.status === "Overdue") totalOverdue += billAmount;
-
-                    let badgeClass = "badge-paid";
-                    if (bill.status === "Pending") badgeClass = "badge-pending";
+                if (shouldInclude) {
+                    let badgeClass = "badge-pending";
+                    if (bill.status === "Paid") badgeClass = "badge-paid";
                     if (bill.status === "Overdue") badgeClass = "badge-overdue";
 
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td class="fw-semibold">${bill.name}</td>
-                        <td class="text-muted">${bill.provider}</td>
-                        <td class="fw-semibold">RM ${billAmount.toFixed(2)}</td>
-                        <td>${bill.date}</td>
-                        <td><span class="status-badge ${badgeClass}">${bill.status}</span></td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-sm btn-light border rounded-3 text-primary me-1" onclick="viewBill('${bill.name}', 'RM ${billAmount.toFixed(2)}', '${bill.status}')"><i class="fa-solid fa-eye"></i></button>
-                            <button type="button" class="btn btn-sm btn-light border rounded-3 text-danger" onclick="deleteBill(${bill.id})"><i class="fa-solid fa-trash-can"></i></button>
-                        </td>
+                    const row = `
+                        <tr>
+                            <td class="fw-semibold text-dark">${bill.name}</td>
+                            <td class="text-muted small">${bill.provider}</td>
+                            <td class="fw-bold">RM ${parseFloat(bill.amount).toFixed(2)}</td>
+                            <td class="text-secondary">${bill.date}</td>
+                            <td><span class="${badgeClass}">${bill.status}</span></td>
+                        </tr>
                     `;
-                    tableBody.appendChild(row);
+                    tbody.innerHTML += row;
                 }
             });
 
-            document.getElementById("cardPaid").innerText = `RM ${totalPaid.toFixed(2)}`;
-            document.getElementById("cardPending").innerText = `RM ${totalPending.toFixed(2)}`;
-            document.getElementById("cardOverdue").innerText = `RM ${totalOverdue.toFixed(2)}`;
-        }
-
-        function deleteBill(id) {
-            let currentBills = JSON.parse(localStorage.getItem("storedBills")) || [];
-            lastDeletedIndex = currentBills.findIndex(b => b.id === id);
-            if(lastDeletedIndex !== -1) {
-                lastDeletedBill = currentBills[lastDeletedIndex];
-                currentBills.splice(lastDeletedIndex, 1);
-                localStorage.setItem("storedBills", JSON.stringify(currentBills));
-                renderTableAndCards();
-                const toast = new bootstrap.Toast(document.getElementById('recoverToast'));
-                toast.show();
+            if (tbody.innerHTML === "") {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No bills found for this period.</td></tr>`;
             }
         }
 
-        function recoverDeletedBill() {
-            if (lastDeletedBill !== null && lastDeletedIndex !== null) {
-                let currentBills = JSON.parse(localStorage.getItem("storedBills")) || [];
-                currentBills.splice(lastDeletedIndex, 0, lastDeletedBill);
-                localStorage.setItem("storedBills", JSON.stringify(currentBills));
-                lastDeletedBill = null; lastDeletedIndex = null;
-                renderTableAndCards();
-                bootstrap.Toast.getInstance(document.getElementById('recoverToast')).hide();
-            }
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
         }
 
-        document.getElementById("addBillForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const name = document.getElementById("newBillName").value;
-            const provider = document.getElementById("newBillProvider").value; 
-            const amount = parseFloat(document.getElementById("newBillAmount").value);
-            const rawDate = document.getElementById("newBillDate").value;
-            const periodTarget = document.getElementById("newBillPeriod").value;
-            const statusText = document.getElementById("newBillStatus").value;
-            
-            const formattedDate = new Date(rawDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
-            const newBillObject = { id: Date.now(), name, provider, amount, date: formattedDate, period: periodTarget, status: statusText };
-            
-            let currentBills = JSON.parse(localStorage.getItem("storedBills")) || [];
-            currentBills.unshift(newBillObject);
-            localStorage.setItem("storedBills", JSON.stringify(currentBills));
-            
-            renderTableAndCards();
-            bootstrap.Modal.getInstance(document.getElementById('addBillModal')).hide();
-            document.getElementById("addBillForm").reset();
-        });
-
-        function viewBill(name, price, status) { alert(`🔍 Bill Statement Audit:\n\nName: ${name}\nAmount: ${price}\nStatus: ${status}`); }
-        function logout() { sessionStorage.clear(); window.location.href = "index.html"; }
-        
-        renderTableAndCards();
+        renderBillsTable();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
