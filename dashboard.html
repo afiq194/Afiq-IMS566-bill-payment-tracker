@@ -107,6 +107,25 @@
     </div>
 
     <script>
+        const backupRealBills = [
+            { id: 1, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
+            { id: 2, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
+            { id: 3, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "May 28, 2026", period: "current", status: "Pending" },
+            { id: 4, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "May 01, 2026", period: "current", status: "Overdue" },
+            { id: 5, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
+            { id: 6, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
+            { id: 7, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
+            { id: 8, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
+            { id: 9, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
+            { id: 10, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
+            { id: 11, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
+            { id: 12, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" }
+        ];
+
+        if (!localStorage.getItem("storedBills") || JSON.parse(localStorage.getItem("storedBills")).length === 0) {
+            localStorage.setItem("storedBills", JSON.stringify(backupRealBills));
+        }
+
         let breakdownChartInstance = null;
 
         function calculateDashboardMetrics() {
@@ -127,7 +146,7 @@
                     const s = selectedPeriod.toLowerCase();
                     
                     if (s === "current" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
-                    if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("-04"))) shouldInclude = true;
+                    if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
                     if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
                     if (s === "feb" && (p.includes("feb") || p.includes("-02"))) shouldInclude = true;
                     if (s === "mar" && (p.includes("mar") || p.includes("-03"))) shouldInclude = true;
