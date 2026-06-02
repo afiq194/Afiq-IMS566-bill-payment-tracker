@@ -63,11 +63,12 @@
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
                 <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="dashboardPeriodFilter" onchange="calculateDashboardMetrics()">
-    <option value="current">Current Month (June 2026)</option> <option value="previous">Previous Month (May 2026)</option>  <option value="Apr">April 2026</option>
-    <option value="Mar">March 2026</option>
-    <option value="Feb">February 2026</option>
-    <option value="Jan">January 2026</option>
-    <option value="annual">Annual Summary (Jan-June 2026)</option>
+                    <option value="current">Current Month (May 2026)</option>
+                    <option value="previous">Previous Month (April 2026)</option>
+                    <option value="Mar">March 2026</option>
+                    <option value="Feb">February 2026</option>
+                    <option value="Jan">January 2026</option>
+                    <option value="annual">Annual Summary (Jan-May 2026)</option>
                 </select>
             </div>
         </div>
@@ -125,7 +126,6 @@
                     const p = bill.period.toLowerCase();
                     const s = selectedPeriod.toLowerCase();
                     
-                    // Logik pembetulan: Dia semak padanan teks ATAU format tarikh standard (cth: "2026-01")
                     if (s === "current" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
                     if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("-04"))) shouldInclude = true;
                     if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
