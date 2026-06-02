@@ -62,14 +62,14 @@
                 <p class="text-muted mb-0">Dynamic analytics generated straight from client storage.</p>
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="periodFilter" onchange="renderDashboardAndCards()">
-    <option value="current">Current Month (May 2026)</option>
-    <option value="previous">Previous Month (April 2026)</option>
-    <option value="Mar">March 2026</option>
-    <option value="Feb">February 2026</option>
-    <option value="Jan">January 2026</option>
-    <option value="annual">Annual Summary (Jan-May 2026)</option>
-</select>
+                <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="dashboardPeriodFilter" onchange="calculateDashboardMetrics()">
+                    <option value="current">Current Month (May 2026)</option>
+                    <option value="previous">Previous Month (April 2026)</option>
+                    <option value="Mar">March 2026</option>
+                    <option value="Feb">February 2026</option>
+                    <option value="Jan">January 2026</option>
+                    <option value="annual">Annual Summary (Jan-May 2026)</option>
+                </select>
             </div>
         </div>
 
