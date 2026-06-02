@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Bill - Bill Payment Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .navbar-custom { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; }
+        .navbar-custom .navbar-brand { color: #0f172a; font-weight: 700; }
+        .navbar-custom .nav-link { color: #64748b; font-weight: 500; }
+        .navbar-custom .nav-link.active { color: #6366f1 !important; }
+        
+        .card-custom { border-radius: 24px; border: none; background-color: #ffffff; padding: 40px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto; }
+        .btn-save { background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; font-weight: 600; border: none; border-radius: 12px; padding: 12px; transition: all 0.3s ease; }
+        .btn-save:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); color: white; transform: translateY(-2px); }
+        .form-control, .form-select { border-radius: 12px; padding: 12px; border: 1px solid #cbd5e1; }
+        .form-control:focus, .form-select:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+    </style>
+</head>
+<body>
+
+    <script>
+        if (!sessionStorage.getItem("isLoggedIn")) {
+            alert("Unauthorized access! Please login first.");
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <nav class="navbar navbar-expand-lg navbar-custom py-3 mb-5 shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+                Bill Payment Tracker
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-2">
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="fa-solid fa-chart-pie me-1"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bills-list.html"><i class="fa-solid fa-wallet me-1"></i> My Bills</a></li>
+                    <li class="nav-item"><a class="nav-link" href="categories.html"><i class="fa-solid fa-layer-group me-1"></i> Categories</a></li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-danger btn-sm rounded-3 px-3 ms-lg-3" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card-custom shadow-sm mb-5">
+            <h2 class="fw-bold mb-1">Add New Bill</h2>
+            <p class="text-muted small mb-4">Fill in the details to log a new bill into the tracker.</p>
+            
+            <form id="addBillForm" onsubmit="saveBill(event)">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Bill Name</label>
+                    <input type="text" class="form-control" id="billName" placeholder="e.g., Unifi Broadband" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Provider & Category</label>
+                    <select class="form-select" id="billCategory" required>
+                        <option value="Maybank Islamic / Financial Loans">Financial Loans</option>
+                        <option value="Telekom Malaysia / Internet">Internet</option>
+                        <option value="Tenaga Nasional Berhad / Utility">Utility</option>
+                        <option value="Coway Malaysia / Home Appliances">Home Appliances</option>
+                        <option value="General / General">General</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Amount (RM)</label>
+                    <input type="number" step="0.01" class="form-control" id="billAmount" placeholder="0.00" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Due Date</label>
+                    <input type="text" class="form-control" id="billDate" placeholder="e.g., May 15, 2026" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Month Period</label>
+                    <select class="form-select" id="billPeriod" required>
+                        <option value="current">Current Month (May 2026)</option>
+                        <option value="previous">Previous Month (April 2026)</option>
+                        <option value="Mar">March 2026</option>
+                        <option value="Feb">February 2026</option>
+                        <option value="Jan">January 2026</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-secondary">Status</label>
+                    <select class="form-select" id="billStatus" required>
+                        <option value="Paid">Paid</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Overdue">Overdue</option>
+                    </select>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-save py-3">Save Bill</button>
+                    <a href="dashboard.html" class="btn btn-light py-3 rounded-3 fw-semibold text-muted">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function saveBill(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById("billName").value;
+            const provider = document.getElementById("billCategory").value;
+            const amount = parseFloat(document.getElementById("billAmount").value) || 0;
+            const date = document.getElementById("billDate").value;
+            const period = document.getElementById("billPeriod").value;
+            const status = document.getElementById("billStatus").value;
+            
+            // Ambil data sedia ada
+            let currentBills = JSON.parse(localStorage.getItem("storedBills")) || [];
+            
+            // Generate ID baru unik
+            const newId = "b_" + Date.now();
+            
+            const newBill = {
+                id: newId,
+                name: name,
+                provider: provider,
+                amount: amount,
+                date: date,
+                period: period,
+                status: status
+            };
+            
+            // Masukkan bil baru ke dalam senarai
+            currentBills.push(newBill);
+            
+            // Simpan balik ke localStorage
+            localStorage.setItem("storedBills", JSON.stringify(currentBills));
+            
+            alert("Bill added successfully!");
+            window.location.href = "dashboard.html";
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
