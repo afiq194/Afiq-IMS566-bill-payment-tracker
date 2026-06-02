@@ -108,39 +108,46 @@
 
     <script>
         const backupRealBills = [
-            { id: 1, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
-            { id: 2, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
-            { id: 3, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "May 28, 2026", period: "current", status: "Paid" },
-            { id: 4, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "May 01, 2026", period: "current", status: "Paid" },
-            
-            { id: 5, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
-            { id: 6, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
-            { id: 7, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
-            { id: 8, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
-            
-            { id: 9, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
-            { id: 10, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
-            { id: 11, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
-            { id: 12, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
-            
-            { id: 13, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
-            { id: 14, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
-            { id: 15, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
-            { id: 16, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
-            
-            { id: 17, name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
-            { id: 18, name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" },
-            { id: 19, name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
-            { id: 20, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
+            { id: "b1", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
+            { id: "b2", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
+            { id: "b3", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "May 28, 2026", period: "current", status: "Paid" },
+            { id: "b4", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "May 01, 2026", period: "current", status: "Paid" },
+            { id: "b5", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
+            { id: "b6", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
+            { id: "b7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
+            { id: "b8", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
+            { id: "b9", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
+            { id: "b10", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
+            { id: "b11", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
+            { id: "b12", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
+            { id: "b13", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
+            { id: "b14", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
+            { id: "b15", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
+            { id: "b16", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
+            { id: "b17", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
+            { id: "b18", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" },
+            { id: "b19", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
+            { id: "b20", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
         ];
 
-if (!localStorage.getItem("storedBills") || JSON.parse(localStorage.getItem("storedBills")).length === 0) {
-    localStorage.setItem("storedBills", JSON.stringify(backupRealBills));
-}
         let breakdownChartInstance = null;
 
         function calculateDashboardMetrics() {
-            const bills = JSON.parse(localStorage.getItem("storedBills")) || [];
+            const userBills = JSON.parse(localStorage.getItem("storedBills")) || [];
+            
+            const formattedUserBills = userBills.map((bill, index) => {
+                return {
+                    id: bill.id || "u_" + index,
+                    name: bill.name || bill.billName || "New Bill",
+                    provider: bill.provider || bill.category || "General",
+                    amount: parseFloat(bill.amount || bill.billAmount) || 0,
+                    date: bill.date || bill.dueDate || "May 2026",
+                    period: bill.period || "current", // Auto masuk bulan mei
+                    status: bill.status || "Paid"
+                };
+            });
+
+            const bills = [...backupRealBills, ...formattedUserBills];
             const selectedPeriod = document.getElementById("dashboardPeriodFilter").value;
             
             let totalPaid = 0;
@@ -210,7 +217,6 @@ if (!localStorage.getItem("storedBills") || JSON.parse(localStorage.getItem("sto
 
         calculateDashboardMetrics();
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
