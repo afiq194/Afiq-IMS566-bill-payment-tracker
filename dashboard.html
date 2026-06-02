@@ -20,6 +20,9 @@
         .bg-pending { background: linear-gradient(135deg, #d97706, #f59e0b); }
         .bg-overdue { background: linear-gradient(135deg, #e11d48, #f43f5e); }
         
+        .btn-add-bill { background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; font-weight: 600; border: none; padding: 10px 20px; border-radius: 12px; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2); }
+        .btn-add-bill:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); color: white; transform: translateY(-2px); box-shadow: 0 6px 12px -1px rgba(99, 102, 241, 0.3); }
+        
         .chart-card { border-radius: 24px; border: none; background-color: #ffffff; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .chart-container { position: relative; width: 100%; height: 360px; display: flex; justify-content: center; align-items: center; }
     </style>
@@ -56,11 +59,13 @@
 
     <div class="container">
         <div class="row mb-5 align-items-center">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <h1 class="fw-bold mb-1">Welcome Back, Afiq!</h1>
                 <p class="text-muted mb-0">Dynamic analytics generated straight from client storage.</p>
             </div>
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex flex-wrap justify-content-md-end align-items-center gap-3">
+                <a href="add-new-bill.html" class="btn btn-add-bill shadow-sm"><i class="fa-solid fa-plus"></i> Add New Bill</a>
+                
                 <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="dashboardPeriodFilter" onchange="calculateDashboardMetrics()">
                     <option value="annual" selected>Annual Summary (Jan-May 2026)</option>
                     <option value="current">Current Month (May 2026)</option>
@@ -107,30 +112,32 @@
     <script>
         let breakdownChartInstance = null;
 
+        // LOGIK BARU: HANYA SET KALAU LOCALSTORAGE BETUL-BETUL KOSONG SAHAJA!
         function initDataIfEmpty() {
             const currentData = localStorage.getItem("storedBills");
-            if (!currentData || JSON.parse(currentData).length === 0 || JSON.parse(currentData).length > 30) {
+            
+            if (!currentData || JSON.parse(currentData).length === 0) {
                 const freshBackup = [
-                    { id: "b1", name: "Maybank Car Loan", provider: "Maybank Islamic", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
-                    { id: "b2", name: "Unifi Broadband", provider: "Telekom Malaysia", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
-                    { id: "b3", name: "TNB Electricity", provider: "Tenaga Nasional Berhad", amount: 145.00, date: "May 28, 2026", period: "current", status: "Paid" },
-                    { id: "b4", name: "Coway Water Filter", provider: "Coway Malaysia", amount: 85.00, date: "May 01, 2026", period: "current", status: "Paid" },
-                    { id: "b5", name: "Maybank Car Loan", provider: "Maybank Islamic", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
-                    { id: "b6", name: "Unifi Broadband", provider: "Telekom Malaysia", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
-                    { id: "b7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad", amount: 145.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
-                    { id: "b8", name: "Coway Water Filter", provider: "Coway Malaysia", amount: 85.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
-                    { id: "b9", name: "Maybank Car Loan", provider: "Maybank Islamic", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
-                    { id: "b10", name: "Unifi Broadband", provider: "Telekom Malaysia", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
-                    { id: "b11", name: "TNB Electricity", provider: "Tenaga Nasional Berhad", amount: 145.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
-                    { id: "b12", name: "Coway Water Filter", provider: "Coway Malaysia", amount: 85.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
-                    { id: "b13", name: "Maybank Car Loan", provider: "Maybank Islamic", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
-                    { id: "b14", name: "Unifi Broadband", provider: "Telekom Malaysia", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
-                    { id: "b15", name: "TNB Electricity", provider: "Tenaga Nasional Berhad", amount: 145.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
-                    { id: "b16", name: "Coway Water Filter", provider: "Coway Malaysia", amount: 85.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
-                    { id: "b17", name: "Maybank Car Loan", provider: "Maybank Islamic", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
-                    { id: "b18", name: "Unifi Broadband", provider: "Telekom Malaysia", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" },
-                    { id: "b19", name: "TNB Electricity", provider: "Tenaga Nasional Berhad", amount: 145.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
-                    { id: "b20", name: "Coway Water Filter", provider: "Coway Malaysia", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
+                    { id: "b1", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
+                    { id: "b2", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
+                    { id: "b3", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "May 28, 2026", period: "current", status: "Paid" },
+                    { id: "b4", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "May 01, 2026", period: "current", status: "Paid" },
+                    { id: "b5", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
+                    { id: "b6", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
+                    { id: "b7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
+                    { id: "b8", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
+                    { id: "b9", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
+                    { id: "b10", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
+                    { id: "b11", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
+                    { id: "b12", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
+                    { id: "b13", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
+                    { id: "b14", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
+                    { id: "b15", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
+                    { id: "b16", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
+                    { id: "b17", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
+                    { id: "b18", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" },
+                    { id: "b19", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
+                    { id: "b20", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
                 ];
                 localStorage.setItem("storedBills", JSON.stringify(freshBackup));
             }
@@ -146,7 +153,6 @@
             let totalOverdue = 0;
 
             bills.forEach(bill => {
-                let bName = bill.name || bill.billName;
                 let bAmount = parseFloat(bill.amount || bill.billAmount) || 0;
                 let bStatus = bill.status || "Paid";
                 let bPeriod = bill.period || "current";
