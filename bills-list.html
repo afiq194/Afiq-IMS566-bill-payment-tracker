@@ -54,7 +54,6 @@
     </nav>
 
     <div class="container">
-        
         <div class="card-custom shadow-sm mb-5">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
                 <div>
@@ -63,12 +62,12 @@
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <select class="form-select rounded-3 shadow-sm w-auto" id="listPeriodFilter" onchange="renderBillsTable()">
+                        <option value="annual" selected>Annual Summary (Jan-May 2026)</option>
                         <option value="current">Current Month (May 2026)</option>
                         <option value="previous">Previous Month (April 2026)</option>
                         <option value="Mar">March 2026</option>
                         <option value="Feb">February 2026</option>
                         <option value="Jan">January 2026</option>
-                        <option value="annual">Annual Summary (Jan-May 2026)</option>
                     </select>
                 </div>
             </div>
@@ -89,63 +88,30 @@
                 </table>
             </div>
         </div>
-
     </div>
 
     <script>
-        const backupRealBills = [
-            { id: "b1", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
-            { id: "b2", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
-            { id: "b3", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "May 28, 2026", period: "current", status: "Paid" },
-            { id: "b4", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "May 01, 2026", period: "current", status: "Paid" },
-            { id: "b5", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
-            { id: "b6", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
-            { id: "b7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
-            { id: "b8", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
-            { id: "b9", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
-            { id: "b10", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
-            { id: "b11", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
-            { id: "b12", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
-            { id: "b13", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
-            { id: "b14", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
-            { id: "b15", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
-            { id: "b16", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
-            { id: "b17", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
-            { id: "b18", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" },
-            { id: "b19", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 145.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
-            { id: "b20", name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
-        ];
-
         function renderBillsTable() {
-            const userBills = JSON.parse(localStorage.getItem("storedBills")) || [];
-            
-            const formattedUserBills = userBills.map((bill, index) => {
-                return {
-                    id: bill.id || "u_" + index,
-                    name: bill.name || bill.billName || "New Bill",
-                    provider: bill.provider || bill.category || "General",
-                    amount: parseFloat(bill.amount || bill.billAmount) || 0,
-                    date: bill.date || bill.dueDate || "May 2026",
-                    period: bill.period || "current",
-                    status: bill.status || "Paid"
-                };
-            });
-
-            const bills = [...backupRealBills, ...formattedUserBills];
+            const bills = JSON.parse(localStorage.getItem("storedBills")) || [];
             const selectedPeriod = document.getElementById("listPeriodFilter").value;
             const tbody = document.getElementById("billsTableBody");
             
             tbody.innerHTML = "";
 
             bills.forEach(bill => {
+                let bName = bill.name || bill.billName || "New Bill";
+                let bProvider = bill.provider || bill.category || "General";
+                let bAmount = parseFloat(bill.amount || bill.billAmount) || 0;
+                let bDate = bill.date || bill.dueDate || "May 2026";
+                let bStatus = bill.status || "Paid";
+                let bPeriod = bill.period || "current";
+
                 let shouldInclude = false;
-                
                 if (selectedPeriod === "annual") {
                     shouldInclude = true;
-                } else if (bill.period) {
-                    const p = bill.period.toLowerCase();
+                } else {
+                    const p = bPeriod.toLowerCase();
                     const s = selectedPeriod.toLowerCase();
-                    
                     if (s === "current" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
                     if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
                     if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
@@ -155,16 +121,16 @@
 
                 if (shouldInclude) {
                     let badgeClass = "badge-pending";
-                    if (bill.status === "Paid") badgeClass = "badge-paid";
-                    if (bill.status === "Overdue") badgeClass = "badge-overdue";
+                    if (bStatus === "Paid") badgeClass = "badge-paid";
+                    if (bStatus === "Overdue") badgeClass = "badge-overdue";
 
                     const row = `
                         <tr>
-                            <td class="fw-semibold text-dark">${bill.name}</td>
-                            <td class="text-muted small">${bill.provider}</td>
-                            <td class="fw-bold">RM ${parseFloat(bill.amount).toFixed(2)}</td>
-                            <td class="text-secondary">${bill.date}</td>
-                            <td><span class="${badgeClass}">${bill.status}</span></td>
+                            <td class="fw-semibold text-dark">${bName}</td>
+                            <td class="text-muted small">${bProvider}</td>
+                            <td class="fw-bold">RM ${bAmount.toFixed(2)}</td>
+                            <td class="text-secondary">${bDate}</td>
+                            <td><span class="${badgeClass}">${bStatus}</span></td>
                         </tr>
                     `;
                     tbody.innerHTML += row;
