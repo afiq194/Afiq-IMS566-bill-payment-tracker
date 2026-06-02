@@ -120,8 +120,9 @@
             { id: 20, name: "Coway Water Filter", provider: "Coway Malaysia / Appliance", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
         ];
 
-        localStorage.setItem("storedBills", JSON.stringify(backupRealBills));
-
+if (!localStorage.getItem("storedBills") || JSON.parse(localStorage.getItem("storedBills")).length === 0) {
+    localStorage.setItem("storedBills", JSON.stringify(backupRealBills));
+}
         function renderBillsTable() {
             const bills = JSON.parse(localStorage.getItem("storedBills")) || [];
             const selectedPeriod = document.getElementById("listPeriodFilter").value;
