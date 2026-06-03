@@ -80,14 +80,15 @@
                 
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Due Date</label>
-                    <input type="text" class="form-control" id="billDate" placeholder="e.g., May 15, 2026" required>
+                    <input type="text" class="form-control" id="billDate" placeholder="e.g., June 15, 2026" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Month Period</label>
                     <select class="form-select" id="billPeriod" required>
-                        <option value="current">Current Month (May 2026)</option>
-                        <option value="previous">Previous Month (April 2026)</option>
+                        <option value="june" selected>Current Month (June 2026)</option>
+                        <option value="current">May 2026</option>
+                        <option value="previous">April 2026</option>
                         <option value="Mar">March 2026</option>
                         <option value="Feb">February 2026</option>
                         <option value="Jan">January 2026</option>
@@ -122,10 +123,8 @@
             const period = document.getElementById("billPeriod").value;
             const status = document.getElementById("billStatus").value;
             
-            // Ambil data sedia ada
             let currentBills = JSON.parse(localStorage.getItem("storedBills")) || [];
             
-            // Generate ID baru unik
             const newId = "b_" + Date.now();
             
             const newBill = {
@@ -138,10 +137,8 @@
                 status: status
             };
             
-            // Masukkan bil baru ke dalam senarai
             currentBills.push(newBill);
             
-            // Simpan balik ke localStorage
             localStorage.setItem("storedBills", JSON.stringify(currentBills));
             
             alert("Bill added successfully!");
