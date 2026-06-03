@@ -130,13 +130,34 @@
             }
         }
 
+        function getBillDateObject(bill) {
+            const dateStr = bill.date || bill.dueDate;
+            if (dateStr && !isNaN(Date.parse(dateStr))) {
+                return new Date(dateStr);
+            }
+            
+            const period = (bill.period || "current").toLowerCase();
+            if (period === "june" || period === "jun" || period === "current") return new Date("2026-06-15");
+            if (period === "may") return new Date("2026-05-15");
+            if (period === "previous" || period.includes("apr")) return new Date("2026-04-15");
+            if (period.includes("mar")) return new Date("2026-03-15");
+            if (period.includes("feb")) return new Date("2026-02-15");
+            if (period.includes("jan")) return new Date("2026-01-15");
+            
+            return new Date(0); 
+        }
+
         function renderBillsTable() {
             initDataIfEmptyInList();
-            const bills = JSON.parse(localStorage.getItem("storedBills")) || [];
+            let bills = JSON.parse(localStorage.getItem("storedBills")) || [];
             const selectedPeriod = document.getElementById("listPeriodFilter").value;
             const tbody = document.getElementById("billsTableBody");
             
             tbody.innerHTML = "";
+
+            bills.sort((a, b) => {
+                return getBillDateObject(b) - getBillDateObject(a);
+            });
 
             bills.forEach(bill => {
                 let bId = bill.id;
@@ -147,6 +168,15 @@
                 let bStatus = bill.status || "Paid";
                 let bPeriod = bill.period || "current";
 
+                if (bDate.includes("-") && bDate.length === 10) {
+                    const parts = bDate.split("-");
+                    const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+                    const monthIndex = parseInt(parts[1], 10) - 1;
+                    if (monthIndex >= 0 && monthIndex < 12) {
+                        bDate = `${months[monthIndex]} ${parts[2]}, ${parts[0]}`;
+                    }
+                }
+
                 let shouldInclude = false;
                 if (selectedPeriod === "annual") {
                     shouldInclude = true;
@@ -154,9 +184,16 @@
                     const p = bPeriod.toLowerCase();
                     const s = selectedPeriod.toLowerCase();
                     
-                    if (s === "current" && (p === "june" || p === "jun" || p === "-06")) shouldInclude = true;
+                    if (s === "current" && (p === "june" || p === "jun" || p === "-06" || p === "current")) {
+                        
+                        if (bill.date && (bill.date.includes("May") || bill.date.includes("-05"))) {
+                            shouldInclude = false;
+                        } else {
+                            shouldInclude = true;
+                        }
+                    }
                     
-                    if (s === "may" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
+                    if (s === "may" && (p.includes("may") || p.includes("-05") || (p === "current" && (bill.date && (bill.date.includes("May") || bill.date.includes("-05")))))) shouldInclude = true;
                     
                     if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
                     
