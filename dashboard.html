@@ -100,7 +100,6 @@
         </div>
 
         <div class="row g-4 mb-5">
-
             <div class="col-md-4">
                 <div class="chart-card shadow-sm h-100">
                     <h5 class="fw-bold mb-3" style="font-size: 16px;">Status Breakdown</h5>
@@ -140,26 +139,54 @@
             
             if (!currentData || JSON.parse(currentData).length === 0) {
                 const freshBackup = [
-                    { id: "b1", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "current", status: "Paid" },
-                    { id: "b2", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "May 15, 2026", period: "current", status: "Paid" },
-                    { id: "b3", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "May 28, 2026", period: "current", status: "Paid" },
-                    { id: "b4", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "May 01, 2026", period: "current", status: "Paid" },
-                    { id: "b5", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
-                    { id: "b6", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
-                    { id: "b7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
-                    { id: "b8", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
-                    { id: "b9", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
-                    { id: "b10", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
-                    { id: "b11", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
-                    { id: "b12", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
-                    { id: "b13", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
-                    { id: "b14", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Feb 15, 2026", period: "Feb", status: "Paid" },
-                    { id: "b15", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
-                    { id: "b16", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
-                    { id: "b17", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
-                    { id: "b18", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 129.00, date: "Jan 15, 2026", period: "Jan", status: "Paid" },
-                    { id: "b19", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
-                    { id: "b20", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 85.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" }
+
+                    { id: "b_jan_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" },
+                    { id: "b_jan_2", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
+                    { id: "b_jan_3", name: "AIA Insurance", provider: "Prudential Assurance / Insurance", amount: 115.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
+                    { id: "b_jan_4", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
+                    { id: "b_jan_5", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd / Utility", amount: 75.00, date: "Jan 28, 2026", period: "Jan", status: "Paid" },
+
+                    { id: "b_feb_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "Feb 01, 2026", period: "Feb", status: "Paid" },
+                    { id: "b_feb_2", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 30.00, date: "Feb 05, 2026", period: "Feb", status: "Paid" },
+                    { id: "b_feb_3", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
+                    { id: "b_feb_4", name: "AIA Insurance", provider: "Prudential Assurance / Insurance", amount: 115.00, date: "Feb 10, 2026", period: "Feb", status: "Paid" },
+                    { id: "b_feb_5", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 130.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
+                    { id: "b_feb_6", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd / Utility", amount: 65.00, date: "Feb 28, 2026", period: "Feb", status: "Paid" },
+
+                    { id: "b_mar_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "Mar 01, 2026", period: "Mar", status: "Paid" },
+                    { id: "b_mar_2", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 30.00, date: "Mar 05, 2026", period: "Mar", status: "Paid" },
+                    { id: "b_mar_3", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
+                    { id: "b_mar_4", name: "AIA Insurance", provider: "Prudential Assurance / Insurance", amount: 115.00, date: "Mar 10, 2026", period: "Mar", status: "Paid" },
+                    { id: "b_mar_5", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 85.00, date: "Mar 15, 2026", period: "Mar", status: "Paid" },
+                    { id: "b_mar_6", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 160.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
+                    { id: "b_mar_7", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd / Utility", amount: 80.00, date: "Mar 28, 2026", period: "Mar", status: "Paid" },
+
+                    { id: "b_apr_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "Apr 01, 2026", period: "previous", status: "Paid" },
+                    { id: "b_apr_2", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 30.00, date: "Apr 05, 2026", period: "previous", status: "Paid" },
+                    { id: "b_apr_3", name: "Netflix", provider: "Netflix / Entertainment", amount: 49.00, date: "Apr 08, 2026", period: "previous", status: "Paid" },
+                    { id: "b_apr_4", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
+                    { id: "b_apr_5", name: "AIA Insurance", provider: "Prudential Assurance / Insurance", amount: 115.00, date: "Apr 10, 2026", period: "previous", status: "Paid" },
+                    { id: "b_apr_6", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 85.00, date: "Apr 15, 2026", period: "previous", status: "Paid" },
+                    { id: "b_apr_7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 120.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
+                    { id: "b_apr_8", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd / Utility", amount: 60.00, date: "Apr 28, 2026", period: "previous", status: "Paid" },
+
+                    { id: "b_may_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "May 01, 2026", period: "May", status: "Paid" },
+                    { id: "b_may_2", name: "Coway Water Filter", provider: "Coway Malaysia / Home Appliances", amount: 30.00, date: "May 05, 2026", period: "May", status: "Paid" },
+                    { id: "b_may_3", name: "Netflix", provider: "Netflix / Entertainment", amount: 49.00, date: "May 08, 2026", period: "May", status: "Paid" },
+                    { id: "b_may_4", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "May 10, 2026", period: "May", status: "Paid" },
+                    { id: "b_may_5", name: "AIA Insurance", provider: "Prudential Assurance / Insurance", amount: 115.00, date: "May 10, 2026", period: "May", status: "Paid" },
+                    { id: "b_may_6", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 85.00, date: "May 15, 2026", period: "May", status: "Overdue" },
+                    { id: "b_may_7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 170.00, date: "May 28, 2026", period: "May", status: "Overdue" },
+                    { id: "b_may_8", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd / Utility", amount: 85.00, date: "May 28, 2026", period: "May", status: "Overdue" },
+
+                    { id: "b_jun_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "June 01, 2026", period: "current", status: "Paid" },
+                    { id: "b_jun_2", name: "YouTube", provider: "YouTube / Entertainment", amount: 29.00, date: "June 03, 2026", period: "current", status: "Paid" },
+                    { id: "b_jun_3", name: "Netflix", provider: "Netflix / Entertainment", amount: 49.00, date: "June 08, 2026", period: "current", status: "Pending" },
+                    { id: "b_jun_4", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "June 10, 2026", period: "current", status: "Pending" },
+                    { id: "b_jun_5", name: "AIA Insurance", provider: "Prudential Assurance / Insurance", amount: 115.00, date: "June 10, 2026", period: "current", status: "Pending" },
+                    { id: "b_jun_6", name: "Unifi Broadband", provider: "Telekom Malaysia / Internet", amount: 85.00, date: "June 15, 2026", period: "current", status: "Pending" },
+                    { id: "b_jun_7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "June 28, 2026", period: "current", status: "Pending" },
+                    { id: "b_jun_8", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd / Utility", amount: 75.00, date: "June 28, 2026", period: "current", status: "Pending" }
                 ];
                 localStorage.setItem("storedBills", JSON.stringify(freshBackup));
             }
@@ -189,8 +216,8 @@
                 else if (pLower === "feb" || pLower.includes("-02")) monthKey = "Feb";
                 else if (pLower === "mar" || pLower.includes("-03")) monthKey = "Mar";
                 else if (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04")) monthKey = "Apr";
-                else if (pLower === "current" || pLower.includes("may") || pLower.includes("-05")) monthKey = "May"; // Berdasarkan kod asal mapping 'current' adalah May
-                else if (pLower === "june" || pLower === "jun" || pLower.includes("-06")) monthKey = "June";
+                else if (pLower === "current" || pLower.includes("june") || pLower.includes("jun") || pLower.includes("-06")) monthKey = "June"; 
+                else if (pLower === "may" || pLower.includes("-05")) monthKey = "May";
 
                 if (monthKey) {
                     trendData[monthKey] += bAmount;
@@ -201,8 +228,8 @@
                     shouldInclude = true;
                 } else {
                     const s = selectedPeriod.toLowerCase();
-                    if (s === "current" && (pLower === "june" || pLower === "jun" || pLower.includes("-06"))) shouldInclude = true;
-                    if (s === "may" && (pLower === "current" || pLower.includes("may") || pLower.includes("-05"))) shouldInclude = true;
+                    if (s === "current" && (pLower === "current" || pLower === "june" || pLower === "jun" || pLower.includes("-06"))) shouldInclude = true;
+                    if (s === "may" && (pLower === "may" || pLower.includes("-05"))) shouldInclude = true;
                     if (s === "previous" && (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04"))) shouldInclude = true;
                     if (s === "mar" && (pLower.includes("mar") || pLower.includes("-03"))) shouldInclude = true;
                     if (s === "feb" && (pLower.includes("feb") || pLower.includes("-02"))) shouldInclude = true;
@@ -214,7 +241,6 @@
                     if (bStatus === "Pending") totalPending += bAmount;
                     if (bStatus === "Overdue") totalOverdue += bAmount;
                     
-
                     filteredBillsForTop.push(bill);
                 }
             });
@@ -222,7 +248,6 @@
             document.getElementById("dashPaid").innerText = `RM ${totalPaid.toFixed(2)}`;
             document.getElementById("dashPending").innerText = `RM ${totalPending.toFixed(2)}`;
             document.getElementById("dashOverdue").innerText = `RM ${totalOverdue.toFixed(2)}`;
-
 
             renderCharts(totalPaid, totalPending, totalOverdue, trendData, filteredBillsForTop);
         }
