@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .navbar-custom { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; }
@@ -25,6 +26,9 @@
         .sub-list-item:last-child { border-bottom: none; }
         .chevron-icon { transition: transform 0.2s ease; color: #64748b; }
         .accordion-button:not(.collapsed) .chevron-icon { transform: rotate(180deg); color: #6366f1; }
+
+        .chart-card-custom { border-radius: 24px; border: none; background-color: #ffffff; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .chart-wrapper { position: relative; width: 100%; height: 320px; }
     </style>
 </head>
 <body>
@@ -66,12 +70,26 @@
             </div>
         </div>
 
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="chart-card-custom shadow-sm">
+                    <h5 class="fw-bold text-dark mb-3" style="font-size: 16px;">Total Spending Distribution by Category (RM)</h5>
+                    <div class="chart-wrapper">
+                        <canvas id="categorySpendingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="accordion accordion-premium" id="categoryAccordion"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+
+        let categoryChartInstance = null;
+
         function toggleSection(collapseId, buttonElement) {
             const target = document.getElementById(collapseId);
             if (target.classList.contains('show')) {
@@ -90,6 +108,8 @@
 
             const mappedCategories = {};
             const uniqueBillTracker = {}; 
+            
+            const categorySpending = {};
 
             bills.forEach(bill => {
                 let rawProvider = (bill.provider || "").trim();
@@ -106,6 +126,9 @@
                     detectedCategory = rawProvider;
                 }
 
+                let bAmount = parseFloat(bill.amount || bill.billAmount) || 0;
+                categorySpending[detectedCategory] = (categorySpending[detectedCategory] || 0) + bAmount;
+
                 if (!mappedCategories[detectedCategory]) {
                     mappedCategories[detectedCategory] = [];
                     uniqueBillTracker[detectedCategory] = new Set();
@@ -121,6 +144,7 @@
 
             if (categoryNames.length === 0) {
                 accordionContainer.innerHTML = `<div class="text-center py-5 text-muted">No records found.</div>`;
+                renderCategoryChart([], []);
                 return;
             }
 
@@ -154,6 +178,62 @@
                     </div>
                 `;
                 accordionContainer.appendChild(accordionItem);
+            });
+
+            const chartLabels = Object.keys(categorySpending);
+            const chartValues = Object.values(categorySpending);
+
+            renderCategoryChart(chartLabels, chartValues);
+        }
+
+        function renderCategoryChart(labels, values) {
+            const ctx = document.getElementById('categorySpendingChart').getContext('2d');
+            
+            if (categoryChartInstance) {
+                categoryChartInstance.destroy();
+            }
+
+            categoryChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Spent (RM)',
+                        data: values,
+                        backgroundColor: 'rgba(99, 102, 241, 0.85)',
+                        borderColor: '#6366f1',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        barThickness: 22
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Total: RM ${context.raw.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: {
+                                callback: function(value) { return 'RM ' + value; }
+                            }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
             });
         }
 
