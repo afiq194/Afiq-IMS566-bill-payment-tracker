@@ -59,12 +59,12 @@
             <form id="addBillForm" onsubmit="saveBill(event)">
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Bill Name</label>
-                    <input type="text" class="form-control" id="billName" placeholder="e.g., Unifi Broadband" required>
+                    <input type="text" class="form-control" id="billName" placeholder="" required>
                 </div>
                 
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Provider & Category</label>
-                    <input type="text" class="form-control" id="billCategory" placeholder="e.g., Netflix / Entertainment atau BSN / Financial Loans" required>
+                    <input type="text" class="form-control" id="billCategory" placeholder="" required>
                 </div>
                 
                 <div class="mb-3">
@@ -74,7 +74,7 @@
                 
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Due Date</label>
-                    <input type="text" class="form-control" id="billDate" placeholder="e.g., June 15, 2026" required>
+                    <input type="date" class="form-control" id="billDate" required>
                 </div>
 
                 <div class="mb-3">
@@ -111,7 +111,7 @@
             event.preventDefault();
             
             const name = document.getElementById("billName").value;
-            const provider = document.getElementById("billCategory").value; // Mengambil string taipan bebas dari text input
+            const provider = document.getElementById("billCategory").value;
             const amount = parseFloat(document.getElementById("billAmount").value) || 0;
             const date = document.getElementById("billDate").value;
             const period = document.getElementById("billPeriod").value;
