@@ -7,6 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .navbar-custom { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; }
@@ -27,6 +29,9 @@
         
         .btn-delete { background-color: #fff1f2; color: #e11d48; border: none; padding: 8px 12px; border-radius: 8px; transition: all 0.2s ease; }
         .btn-delete:hover { background-color: #ffe4e6; color: #be123c; transform: scale(1.05); }
+
+        .chart-card-custom { border-radius: 24px; border: none; background-color: #ffffff; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .chart-wrapper { position: relative; width: 100%; height: 280px; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
@@ -60,6 +65,26 @@
     </nav>
 
     <div class="container">
+        <div class="row g-4 mb-5">
+            <div class="col-md-7">
+                <div class="chart-card-custom shadow-sm h-100">
+                    <h5 class="fw-bold text-dark mb-3" style="font-size: 16px;">Monthly Performance Status</h5>
+                    <div class="chart-wrapper">
+                        <canvas id="stackedStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="chart-card-custom shadow-sm h-100">
+                    <h5 class="fw-bold text-dark mb-3" style="font-size: 16px;">Provider Share Breakdown</h5>
+                    <div class="chart-wrapper">
+                        <canvas id="providerPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card-custom shadow-sm mb-5">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
                 <div>
@@ -101,6 +126,10 @@
     </div>
 
     <script>
+
+        let stackedChartInstance = null;
+        let pieChartInstance = null;
+
         function initDataIfEmptyInList() {
             const currentData = localStorage.getItem("storedBills");
             if (!currentData || JSON.parse(currentData).length === 0) {
@@ -159,6 +188,14 @@
                 return getBillDateObject(b) - getBillDateObject(a);
             });
 
+            let monthsLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'];
+            let stackedData = {
+                'Paid': [0, 0, 0, 0, 0, 0],
+                'Pending': [0, 0, 0, 0, 0, 0],
+                'Overdue': [0, 0, 0, 0, 0, 0]
+            };
+            let providerCounts = {};
+
             bills.forEach(bill => {
                 let bId = bill.id;
                 let bName = bill.name || bill.billName || "New Bill";
@@ -185,7 +222,6 @@
                     const s = selectedPeriod.toLowerCase();
                     
                     if (s === "current" && (p === "june" || p === "jun" || p === "-06" || p === "current")) {
-                        
                         if (bill.date && (bill.date.includes("May") || bill.date.includes("-05"))) {
                             shouldInclude = false;
                         } else {
@@ -194,12 +230,23 @@
                     }
                     
                     if (s === "may" && (p.includes("may") || p.includes("-05") || (p === "current" && (bill.date && (bill.date.includes("May") || bill.date.includes("-05")))))) shouldInclude = true;
-                    
                     if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
-                    
                     if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
                     if (s === "feb" && (p.includes("feb") || p.includes("-02"))) shouldInclude = true;
                     if (s === "mar" && (p.includes("mar") || p.includes("-03"))) shouldInclude = true;
+                }
+
+                let pLower = bPeriod.toLowerCase();
+                let mIdx = -1;
+                if (pLower === "jan" || pLower.includes("-01")) mIdx = 0;
+                else if (pLower === "feb" || pLower.includes("-02")) mIdx = 1;
+                else if (pLower === "mar" || pLower.includes("-03")) mIdx = 2;
+                else if (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04")) mIdx = 3;
+                else if (pLower === "current" || pLower.includes("may") || pLower.includes("-05")) mIdx = 4;
+                else if (pLower === "june" || pLower === "jun" || pLower.includes("-06")) mIdx = 5;
+
+                if (mIdx !== -1 && stackedData[bStatus]) {
+                    stackedData[bStatus][mIdx] += bAmount;
                 }
 
                 if (shouldInclude) {
@@ -222,12 +269,80 @@
                         </tr>
                     `;
                     tbody.innerHTML += row;
+
+                    providerCounts[bProvider] = (providerCounts[bProvider] || 0) + 1;
                 }
             });
 
             if (tbody.innerHTML === "") {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">No bills found for this period.</td></tr>`;
             }
+
+            generateListCharts(stackedData, providerCounts);
+        }
+
+        function generateListCharts(stackedData, providerCounts) {
+
+            const ctxStacked = document.getElementById('stackedStatusChart').getContext('2d');
+            if (stackedChartInstance) stackedChartInstance.destroy();
+
+            stackedChartInstance = new Chart(ctxStacked, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'],
+                    datasets: [
+                        { label: 'Paid', data: stackedData['Paid'], backgroundColor: '#6366f1' },
+                        { label: 'Pending', data: stackedData['Pending'], backgroundColor: '#f59e0b' },
+                        { label: 'Overdue', data: stackedData['Overdue'], backgroundColor: '#f43f5e' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true, grid: { color: '#f1f5f9' } }
+                    }
+                }
+            });
+
+            let pieLabels = Object.keys(providerCounts);
+            let pieValues = Object.values(providerCounts);
+
+            if (pieLabels.length === 0) {
+                pieLabels = ['No Data'];
+                pieValues = [1];
+            }
+
+            const ctxPie = document.getElementById('providerPieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy();
+
+            pieChartInstance = new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: pieLabels,
+                    datasets: [{
+                        data: pieValues,
+                        backgroundColor: [
+                            '#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', 
+                            '#8b5cf6', '#ec4899', '#64748b', '#06b6d4', '#14b8a6'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { 
+                            position: 'right',
+                            labels: { boxWidth: 12, font: { size: 11 } }
+                        } 
+                    }
+                }
+            });
         }
 
         function deleteBill(billId) {
