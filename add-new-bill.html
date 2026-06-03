@@ -64,13 +64,7 @@
                 
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Provider & Category</label>
-                    <select class="form-select" id="billCategory" required>
-                        <option value="Maybank Islamic / Financial Loans">Financial Loans</option>
-                        <option value="Telekom Malaysia / Internet">Internet</option>
-                        <option value="Tenaga Nasional Berhad / Utility">Utility</option>
-                        <option value="Coway Malaysia / Home Appliances">Home Appliances</option>
-                        <option value="General / General">General</option>
-                    </select>
+                    <input type="text" class="form-control" id="billCategory" placeholder="e.g., Netflix / Entertainment atau BSN / Financial Loans" required>
                 </div>
                 
                 <div class="mb-3">
@@ -117,7 +111,7 @@
             event.preventDefault();
             
             const name = document.getElementById("billName").value;
-            const provider = document.getElementById("billCategory").value;
+            const provider = document.getElementById("billCategory").value; // Mengambil string taipan bebas dari text input
             const amount = parseFloat(document.getElementById("billAmount").value) || 0;
             const date = document.getElementById("billDate").value;
             const period = document.getElementById("billPeriod").value;
