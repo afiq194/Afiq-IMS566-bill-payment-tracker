@@ -75,6 +75,13 @@
                 <input type="password" class="form-control form-control-custom" id="password" placeholder="Enter password" required>
             </div>
             <button type="submit" class="btn btn-primary-custom w-100 text-white">Log In</button>
+            
+            <div class="text-center mt-3">
+                <small style="color: #64748b; font-size: 0.85rem; display: block; line-height: 1.5;">
+                    <strong>Demo Access for Evaluation:</strong><br>
+                    Username: <code style="color: #6366f1; font-weight: 600;">afiq</code> | Password: <code style="color: #6366f1; font-weight: 600;">1</code>
+                </small>
+            </div>
         </form>
     </div>
 
@@ -85,7 +92,6 @@
             const usernameInput = document.getElementById("username").value.trim();
             const passwordInput = document.getElementById("password").value;
 
-            
             if (usernameInput === "afiq" && passwordInput === "1") {
                 sessionStorage.setItem("isLoggedIn", "true");
                 sessionStorage.setItem("currentUser", "Afiq"); 
