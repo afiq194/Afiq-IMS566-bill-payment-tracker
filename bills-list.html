@@ -126,7 +126,6 @@
     </div>
 
     <script>
-
         let stackedChartInstance = null;
         let pieChartInstance = null;
 
@@ -134,7 +133,6 @@
             const currentData = localStorage.getItem("storedBills");
             if (!currentData || JSON.parse(currentData).length === 0) {
                 const freshBackup = [
-
                     { id: "b1", name: "Hotlink Postpaid", provider: "Maxis Berhad/Telecommunication", amount: 35.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" },
                     { id: "b2", name: "Maybank Car Loan", provider: "Maybank Islamic/Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
                     { id: "b3", name: "AIA Insurance", provider: "Prudential Assurance/Insurance", amount: 115.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
@@ -249,19 +247,23 @@
                     const p = bPeriod.toLowerCase();
                     const s = selectedPeriod.toLowerCase();
                     
-                    if (s === "current" && (p === "june" || p === "jun" || p === "-06" || p === "current")) {
-                        if (bill.date && (bill.date.includes("May") || bill.date.includes("-05"))) {
-                            shouldInclude = false;
-                        } else {
+                    if (s === "current") {
+                        if (p === "current" || p === "june" || p === "jun" || p === "-06") {
                             shouldInclude = true;
                         }
+                    } else if (s === "may") {
+                        if (p === "may" || p === "-05") {
+                            shouldInclude = true;
+                        }
+                    } else if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) {
+                        shouldInclude = true;
+                    } else if (s === "jan" && (p.includes("jan") || p.includes("-01"))) {
+                        shouldInclude = true;
+                    } else if (s === "feb" && (p.includes("feb") || p.includes("-02"))) {
+                        shouldInclude = true;
+                    } else if (s === "mar" && (p.includes("mar") || p.includes("-03"))) {
+                        shouldInclude = true;
                     }
-                    
-                    if (s === "may" && (p.includes("may") || p.includes("-05") || (p === "current" && (bill.date && (bill.date.includes("May") || bill.date.includes("-05")))))) shouldInclude = true;
-                    if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
-                    if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
-                    if (s === "feb" && (p.includes("feb") || p.includes("-02"))) shouldInclude = true;
-                    if (s === "mar" && (p.includes("mar") || p.includes("-03"))) shouldInclude = true;
                 }
 
                 let pLower = bPeriod.toLowerCase();
@@ -270,8 +272,8 @@
                 else if (pLower === "feb" || pLower.includes("-02")) mIdx = 1;
                 else if (pLower === "mar" || pLower.includes("-03")) mIdx = 2;
                 else if (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04")) mIdx = 3;
-                else if (pLower === "current" || pLower.includes("may") || pLower.includes("-05")) mIdx = 4;
-                else if (pLower === "june" || pLower === "jun" || pLower.includes("-06")) mIdx = 5;
+                else if (pLower === "may" || pLower.includes("-05")) mIdx = 4;
+                else if (pLower === "current" || pLower === "june" || pLower === "jun" || pLower.includes("-06")) mIdx = 5;
 
                 if (mIdx !== -1 && stackedData[bStatus]) {
                     stackedData[bStatus][mIdx] += bAmount;
@@ -310,7 +312,6 @@
         }
 
         function generateListCharts(stackedData, providerCounts) {
-
             const ctxStacked = document.getElementById('stackedStatusChart').getContext('2d');
             if (stackedChartInstance) stackedChartInstance.destroy();
 
