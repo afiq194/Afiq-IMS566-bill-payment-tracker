@@ -139,7 +139,6 @@
             
             if (!currentData || JSON.parse(currentData).length === 0) {
                 const freshBackup = [
-
                     { id: "b_jan_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" },
                     { id: "b_jan_2", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
                     { id: "b_jan_3", name: "AIA Insurance", provider: "Prudential Assurance / Insurance", amount: 115.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
@@ -216,8 +215,8 @@
                 else if (pLower === "feb" || pLower.includes("-02")) monthKey = "Feb";
                 else if (pLower === "mar" || pLower.includes("-03")) monthKey = "Mar";
                 else if (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04")) monthKey = "Apr";
-                else if (pLower === "current" || pLower.includes("june") || pLower.includes("jun") || pLower.includes("-06")) monthKey = "June"; 
                 else if (pLower === "may" || pLower.includes("-05")) monthKey = "May";
+                else if (pLower === "current" || pLower.includes("june") || pLower.includes("jun") || pLower.includes("-06")) monthKey = "June"; 
 
                 if (monthKey) {
                     trendData[monthKey] += bAmount;
@@ -228,12 +227,12 @@
                     shouldInclude = true;
                 } else {
                     const s = selectedPeriod.toLowerCase();
-                    if (s === "current" && (pLower === "current" || pLower === "june" || pLower === "jun" || pLower.includes("-06"))) shouldInclude = true;
                     if (s === "may" && (pLower === "may" || pLower.includes("-05"))) shouldInclude = true;
-                    if (s === "previous" && (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04"))) shouldInclude = true;
-                    if (s === "mar" && (pLower.includes("mar") || pLower.includes("-03"))) shouldInclude = true;
-                    if (s === "feb" && (pLower.includes("feb") || pLower.includes("-02"))) shouldInclude = true;
-                    if (s === "jan" && (pLower.includes("jan") || pLower.includes("-01"))) shouldInclude = true;
+                    else if (s === "current" && (pLower === "current" || pLower === "june" || pLower === "jun" || pLower.includes("-06"))) shouldInclude = true;
+                    else if (s === "previous" && (pLower === "previous" || pLower === "april" || pLower === "apr" || pLower.includes("-04"))) shouldInclude = true;
+                    else if (s === "mar" && (pLower.includes("mar") || pLower.includes("-03"))) shouldInclude = true;
+                    else if (s === "feb" && (pLower.includes("feb") || pLower.includes("-02"))) shouldInclude = true;
+                    else if (s === "jan" && (pLower.includes("jan") || pLower.includes("-01"))) shouldInclude = true;
                 }
                 
                 if (shouldInclude) {
@@ -303,7 +302,6 @@
                 }
             });
 
-           
             let uniqueBills = {};
             filteredBills.forEach(b => {
                 let amt = parseFloat(b.amount || b.billAmount) || 0;
