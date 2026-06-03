@@ -70,9 +70,10 @@
                     <a href="add-new-bill.html" class="btn btn-add-bill shadow-sm"><i class="fa-solid fa-plus"></i> Add New Bill</a>
                     
                     <select class="form-select rounded-3 shadow-sm w-auto" id="listPeriodFilter" onchange="renderBillsTable()">
-                        <option value="annual" selected>Annual Summary (Jan-May 2026)</option>
-                        <option value="current">Current Month (May 2026)</option>
-                        <option value="previous">Previous Month (April 2026)</option>
+                        <option value="annual" selected>Annual Summary (Jan-June 2026)</option>
+                        <option value="current">Current Month (June 2026)</option>
+                        <option value="May">May 2026</option>
+                        <option value="previous">April 2026</option>
                         <option value="Mar">March 2026</option>
                         <option value="Feb">February 2026</option>
                         <option value="Jan">January 2026</option>
@@ -142,7 +143,7 @@
                 let bName = bill.name || bill.billName || "New Bill";
                 let bProvider = bill.provider || bill.category || "General";
                 let bAmount = parseFloat(bill.amount || bill.billAmount) || 0;
-                let bDate = bill.date || bill.dueDate || "May 2026";
+                let bDate = bill.date || bill.dueDate || "June 2026";
                 let bStatus = bill.status || "Paid";
                 let bPeriod = bill.period || "current";
 
@@ -152,8 +153,13 @@
                 } else {
                     const p = bPeriod.toLowerCase();
                     const s = selectedPeriod.toLowerCase();
-                    if (s === "current" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
+                    
+                    if (s === "current" && (p === "june" || p === "jun" || p === "-06")) shouldInclude = true;
+                    
+                    if (s === "may" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
+                    
                     if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
+                    
                     if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
                     if (s === "feb" && (p.includes("feb") || p.includes("-02"))) shouldInclude = true;
                     if (s === "mar" && (p.includes("mar") || p.includes("-03"))) shouldInclude = true;
@@ -190,10 +196,8 @@
         function deleteBill(billId) {
             if (confirm("Are you sure you want to delete this bill?")) {
                 let bills = JSON.parse(localStorage.getItem("storedBills")) || [];
-                // Buang bil yang sepadan dengan ID
                 bills = bills.filter(bill => bill.id !== billId);
                 localStorage.setItem("storedBills", JSON.stringify(bills));
-                // Reload table balik
                 renderBillsTable();
             }
         }
