@@ -69,8 +69,8 @@
                 <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="dashboardPeriodFilter" onchange="calculateDashboardMetrics()">
                     <option value="annual" selected>Annual Summary (Jan-June 2026)</option>
                     <option value="current">Current Month (June 2026)</option>
-                    <option value="previous">Previous Month (May 2026)</option>
-                    <option value="Apr">April 2026</option>
+                    <option value="May">May 2026</option>
+                    <option value="previous">April 2026</option>
                     <option value="Mar">March 2026</option>
                     <option value="Feb">February 2026</option>
                     <option value="Jan">January 2026</option>
@@ -164,11 +164,12 @@
                     const p = bPeriod.toLowerCase();
                     const s = selectedPeriod.toLowerCase();
                     
-                    if (s === "current" && (p === "current" || p.includes("june") || p.includes("jun") || p.includes("-06"))) shouldInclude = true;
+                    if (s === "current" && (p === "june" || p === "jun" || p === "-06")) shouldInclude = true;
 
-                    if (s === "previous" && (p === "previous" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
+                    if (s === "may" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
                     
-                    if (s === "apr" && (p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
+                    if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
+                    
                     if (s === "mar" && (p.includes("mar") || p.includes("-03"))) shouldInclude = true;
                     if (s === "feb" && (p.includes("feb") || p.includes("-02"))) shouldInclude = true;
                     if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
