@@ -23,7 +23,7 @@
         .btn-add-bill { background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; font-weight: 600; border: none; padding: 10px 20px; border-radius: 12px; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2); }
         .btn-add-bill:hover { background: linear-gradient(135deg, #4338ca, #4f46e5); color: white; transform: translateY(-2px); box-shadow: 0 6px 12px -1px rgba(99, 102, 241, 0.3); }
         
-        .chart-card { border-radius: 24px; border: none; background-color: #ffffff; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .chart-card { border-radius: 24px; border: none; background-color: #ffffff; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); h-100; }
         .chart-container { position: relative; width: 100%; height: 360px; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
@@ -99,11 +99,31 @@
             </div>
         </div>
 
-        <div class="row justify-content-center mb-5">
-            <div class="col-md-7">
-                <div class="chart-card shadow-sm">
+        <div class="row g-4 mb-5">
+
+            <div class="col-md-4">
+                <div class="chart-card shadow-sm h-100">
+                    <h5 class="fw-bold mb-3" style="font-size: 16px;">Status Breakdown</h5>
                     <div class="chart-container">
                         <canvas id="breakdownChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="chart-card shadow-sm h-100">
+                    <h5 class="fw-bold mb-3" style="font-size: 16px;">Monthly Bill Trend</h5>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="chart-card shadow-sm h-100">
+                    <h5 class="fw-bold mb-3" style="font-size: 16px;">Top 5 Most Expensive Bills</h5>
+                    <div class="chart-container">
+                        <canvas id="topBillsChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -112,6 +132,8 @@
 
     <script>
         let breakdownChartInstance = null;
+        let trendChartInstance = null;
+        let topBillsChartInstance = null;
 
         function initDataIfEmpty() {
             const currentData = localStorage.getItem("storedBills");
@@ -152,33 +174,48 @@
             let totalPending = 0;
             let totalOverdue = 0;
 
+            let trendData = { 'Jan': 0, 'Feb': 0, 'Mar': 0, 'Apr': 0, 'May': 0, 'June': 0 };
+
+            let filteredBillsForTop = [];
+
             bills.forEach(bill => {
                 let bAmount = parseFloat(bill.amount || bill.billAmount) || 0;
                 let bStatus = bill.status || "Paid";
                 let bPeriod = bill.period || "current";
 
+                let pLower = bPeriod.toLowerCase();
+                let monthKey = "";
+                if (pLower === "jan" || pLower.includes("-01")) monthKey = "Jan";
+                else if (pLower === "feb" || pLower.includes("-02")) monthKey = "Feb";
+                else if (pLower === "mar" || pLower.includes("-03")) monthKey = "Mar";
+                else if (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04")) monthKey = "Apr";
+                else if (pLower === "current" || pLower.includes("may") || pLower.includes("-05")) monthKey = "May"; // Berdasarkan kod asal mapping 'current' adalah May
+                else if (pLower === "june" || pLower === "jun" || pLower.includes("-06")) monthKey = "June";
+
+                if (monthKey) {
+                    trendData[monthKey] += bAmount;
+                }
+
                 let shouldInclude = false;
                 if (selectedPeriod === "annual") {
                     shouldInclude = true;
                 } else {
-                    const p = bPeriod.toLowerCase();
                     const s = selectedPeriod.toLowerCase();
-                    
-                    if (s === "current" && (p === "june" || p === "jun" || p === "-06")) shouldInclude = true;
-
-                    if (s === "may" && (p === "current" || p.includes("may") || p.includes("-05"))) shouldInclude = true;
-                    
-                    if (s === "previous" && (p === "previous" || p.includes("april") || p.includes("apr") || p.includes("-04"))) shouldInclude = true;
-                    
-                    if (s === "mar" && (p.includes("mar") || p.includes("-03"))) shouldInclude = true;
-                    if (s === "feb" && (p.includes("feb") || p.includes("-02"))) shouldInclude = true;
-                    if (s === "jan" && (p.includes("jan") || p.includes("-01"))) shouldInclude = true;
+                    if (s === "current" && (pLower === "june" || pLower === "jun" || pLower.includes("-06"))) shouldInclude = true;
+                    if (s === "may" && (pLower === "current" || pLower.includes("may") || pLower.includes("-05"))) shouldInclude = true;
+                    if (s === "previous" && (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04"))) shouldInclude = true;
+                    if (s === "mar" && (pLower.includes("mar") || pLower.includes("-03"))) shouldInclude = true;
+                    if (s === "feb" && (pLower.includes("feb") || pLower.includes("-02"))) shouldInclude = true;
+                    if (s === "jan" && (pLower.includes("jan") || pLower.includes("-01"))) shouldInclude = true;
                 }
                 
                 if (shouldInclude) {
                     if (bStatus === "Paid") totalPaid += bAmount;
                     if (bStatus === "Pending") totalPending += bAmount;
                     if (bStatus === "Overdue") totalOverdue += bAmount;
+                    
+
+                    filteredBillsForTop.push(bill);
                 }
             });
 
@@ -186,10 +223,12 @@
             document.getElementById("dashPending").innerText = `RM ${totalPending.toFixed(2)}`;
             document.getElementById("dashOverdue").innerText = `RM ${totalOverdue.toFixed(2)}`;
 
-            renderCharts(totalPaid, totalPending, totalOverdue);
+
+            renderCharts(totalPaid, totalPending, totalOverdue, trendData, filteredBillsForTop);
         }
 
-        function renderCharts(paid, pending, overdue) {
+        function renderCharts(paid, pending, overdue, trendData, filteredBills) {
+            
             const ctxBreakdown = document.getElementById('breakdownChart').getContext('2d');
             if (breakdownChartInstance) breakdownChartInstance.destroy();
             
@@ -208,6 +247,82 @@
                     responsive: true, 
                     maintainAspectRatio: false,
                     plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            const ctxTrend = document.getElementById('trendChart').getContext('2d');
+            if (trendChartInstance) trendChartInstance.destroy();
+
+            trendChartInstance = new Chart(ctxTrend, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'],
+                    datasets: [{
+                        label: 'Total Commitment (RM)',
+                        data: [trendData['Jan'], trendData['Feb'], trendData['Mar'], trendData['Apr'], trendData['May'], trendData['June']],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+           
+            let uniqueBills = {};
+            filteredBills.forEach(b => {
+                let amt = parseFloat(b.amount || b.billAmount) || 0;
+                if (!uniqueBills[b.name] || uniqueBills[b.name] < amt) {
+                    uniqueBills[b.name] = amt;
+                }
+            });
+
+            let sortedTopBills = Object.keys(uniqueBills).map(name => {
+                return { name: name, amount: uniqueBills[name] };
+            }).sort((a, b) => b.amount - a.amount).slice(0, 5);
+
+            let topLabels = sortedTopBills.map(b => b.name);
+            let topAmounts = sortedTopBills.map(b => b.amount);
+
+            if (topLabels.length === 0) {
+                topLabels = ['No Data'];
+                topAmounts = [0];
+            }
+
+            const ctxTopBills = document.getElementById('topBillsChart').getContext('2d');
+            if (topBillsChartInstance) topBillsChartInstance.destroy();
+
+            topBillsChartInstance = new Chart(ctxTopBills, {
+                type: 'bar',
+                data: {
+                    labels: topLabels,
+                    datasets: [{
+                        label: 'Amount (RM)',
+                        data: topAmounts,
+                        backgroundColor: '#f59e0b',
+                        borderRadius: 8,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                        y: { grid: { display: false } }
+                    }
                 }
             });
         }
