@@ -144,14 +144,16 @@
         const currentUser = sessionStorage.getItem("currentUser") || "User";
         document.getElementById("welcomeMessage").innerText = `Welcome Back, ${currentUser}!`;
 
+        const userBillsKey = `storedBills_${currentUser.toLowerCase()}`;
+
         let breakdownChartInstance = null;
         let trendChartInstance = null;
         let topBillsChartInstance = null;
 
         function initDataIfEmpty() {
-            const currentData = localStorage.getItem("storedBills");
+            const currentData = localStorage.getItem(userBillsKey);
             
-            if ((!currentData || JSON.parse(currentData).length === 0) && currentUser.toLowerCase() === "user") {
+            if (!currentData && currentUser.toLowerCase() === "user") {
                 const freshBackup = [
                     { id: "b_jan_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" },
                     { id: "b_jan_2", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
@@ -201,15 +203,15 @@
                     { id: "b_jun_7", name: "TNB Electricity", provider: "Tenaga Nasional Berhad / Utility", amount: 150.00, date: "June 28, 2026", period: "current", status: "Pending" },
                     { id: "b_jun_8", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd / Utility", amount: 75.00, date: "June 28, 2026", period: "current", status: "Pending" }
                 ];
-                localStorage.setItem("storedBills", JSON.stringify(freshBackup));
+                localStorage.setItem(userBillsKey, JSON.stringify(freshBackup));
             } else if (!currentData) {
-                localStorage.setItem("storedBills", JSON.stringify([]));
+                localStorage.setItem(userBillsKey, JSON.stringify([]));
             }
         }
 
         function calculateDashboardMetrics() {
             initDataIfEmpty();
-            const bills = JSON.parse(localStorage.getItem("storedBills")) || [];
+            const bills = JSON.parse(localStorage.getItem(userBillsKey)) || [];
             const selectedPeriod = document.getElementById("dashboardPeriodFilter").value;
             
             let totalPaid = 0;
@@ -217,7 +219,6 @@
             let totalOverdue = 0;
 
             let trendData = { 'Jan': 0, 'Feb': 0, 'Mar': 0, 'Apr': 0, 'May': 0, 'June': 0 };
-
             let filteredBillsForTop = [];
 
             bills.forEach(bill => {
@@ -268,7 +269,6 @@
         }
 
         function renderCharts(paid, pending, overdue, trendData, filteredBills) {
-            
             const ctxBreakdown = document.getElementById('breakdownChart').getContext('2d');
             if (breakdownChartInstance) breakdownChartInstance.destroy();
             
