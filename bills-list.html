@@ -129,8 +129,14 @@
         let stackedChartInstance = null;
         let pieChartInstance = null;
 
+        function getUserBillsKey() {
+            const currentUser = sessionStorage.getItem("currentUser") || "User";
+            return `storedBills_${currentUser.toLowerCase()}`;
+        }
+
         function initDataIfEmptyInList() {
-            const currentData = localStorage.getItem("storedBills");
+            const userBillsKey = getUserBillsKey();
+            const currentData = localStorage.getItem(userBillsKey);
             if (!currentData || JSON.parse(currentData).length === 0) {
                 const freshBackup = [
                     { id: "b1", name: "Hotlink Postpaid", provider: "Maxis Berhad/Telecommunication", amount: 35.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" },
@@ -181,7 +187,7 @@
                     { id: "b41", name: "TNB Electricity", provider: "Tenaga Nasional Berhad/Utility", amount: 150.00, date: "June 28, 2026", period: "current", status: "Pending" },
                     { id: "b42", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd/Utility", amount: 75.00, date: "June 28, 2026", period: "current", status: "Pending" }
                 ];
-                localStorage.setItem("storedBills", JSON.stringify(freshBackup));
+                localStorage.setItem(userBillsKey, JSON.stringify(freshBackup));
             }
         }
 
@@ -204,7 +210,8 @@
 
         function renderBillsTable() {
             initDataIfEmptyInList();
-            let bills = JSON.parse(localStorage.getItem("storedBills")) || [];
+            const userBillsKey = getUserBillsKey();
+            let bills = JSON.parse(localStorage.getItem(userBillsKey)) || [];
             const selectedPeriod = document.getElementById("listPeriodFilter").value;
             const tbody = document.getElementById("billsTableBody");
             
@@ -376,9 +383,10 @@
 
         function deleteBill(billId) {
             if (confirm("Are you sure you want to delete this bill?")) {
-                let bills = JSON.parse(localStorage.getItem("storedBills")) || [];
+                const userBillsKey = getUserBillsKey();
+                let bills = JSON.parse(localStorage.getItem(userBillsKey)) || [];
                 bills = bills.filter(bill => bill.id !== billId);
-                localStorage.setItem("storedBills", JSON.stringify(bills));
+                localStorage.setItem(userBillsKey, JSON.stringify(bills));
                 renderBillsTable();
             }
         }
