@@ -151,7 +151,7 @@
         function initDataIfEmpty() {
             const currentData = localStorage.getItem("storedBills");
             
-            if (!currentData || JSON.parse(currentData).length === 0) {
+            if ((!currentData || JSON.parse(currentData).length === 0) && currentUser.toLowerCase() === "user") {
                 const freshBackup = [
                     { id: "b_jan_1", name: "Hotlink Postpaid", provider: "Maxis Berhad / Telecommunication", amount: 35.00, date: "Jan 01, 2026", period: "Jan", status: "Paid" },
                     { id: "b_jan_2", name: "Maybank Car Loan", provider: "Maybank Islamic / Financial Loans", amount: 191.00, date: "Jan 10, 2026", period: "Jan", status: "Paid" },
@@ -202,6 +202,8 @@
                     { id: "b_jun_8", name: "AKSB Water", provider: "Air Kelantan Sdn Bhd / Utility", amount: 75.00, date: "June 28, 2026", period: "current", status: "Pending" }
                 ];
                 localStorage.setItem("storedBills", JSON.stringify(freshBackup));
+            } else if (!currentData) {
+                localStorage.setItem("storedBills", JSON.stringify([]));
             }
         }
 
