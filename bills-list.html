@@ -46,7 +46,7 @@
     <nav class="navbar navbar-expand-lg navbar-custom py-3 mb-5 shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
-                <span class="text-primary me-2"><i class="fa-solid fa-bolt"></i></span> Bill Payment Tracker
+                <span class="text-primary me-2" style="color: #6366f1 !important;"><i class="fa-solid fa-wallet"></i></span> Bill Payment Tracker
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -127,13 +127,17 @@
 
     <footer class="text-center py-4 text-muted mt-auto" style="font-size: 14px; border-top: 1px solid #e2e8f0; background-color: #ffffff;">
         <div class="container">
-            <p class="mb-0">&copy; 2026 Bill Payment Tracker. All rights reserved.</p>
+            <p class="mb-0">&copy; 2026 Muhamad Afiq Afnan. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
         let stackedChartInstance = null;
         let pieChartInstance = null;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            renderBillsTable();
+        });
 
         function getUserBillsKey() {
             const currentUser = sessionStorage.getItem("currentUser") || "User";
@@ -401,8 +405,6 @@
             sessionStorage.clear();
             window.location.href = "index.html";
         }
-
-        renderBillsTable();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
