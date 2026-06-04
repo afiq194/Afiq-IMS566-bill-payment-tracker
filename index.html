@@ -84,25 +84,52 @@
             <div class="text-center mt-3">
                 <small style="color: #64748b; font-size: 0.85rem; display: block; line-height: 1.5;">
                     <strong>Demo Access for Evaluation:</strong><br>
-                    Username: <code style="color: #6366f1; font-weight: 600;">user</code> | Password: <code style="color: #6366f1; font-weight: 600;">123</code>
+                    Username: <code style="color: #6366f1; font-weight: 600;">user</code> | Password: <code style="color: #6366f1; font-weight: 600;">123</code><br>
+                    <span style="color: #10b981; font-size: 0.78rem; font-weight: 500;">💡 Tip: Type any new username & password to register instantly!</span>
                 </small>
             </div>
         </form>
     </div>
 
     <script>
+        if (!localStorage.getItem("tracker_users")) {
+            const defaultUser = { "user": "123" };
+            localStorage.setItem("tracker_users", JSON.stringify(defaultUser));
+        }
+
         document.getElementById("loginForm").addEventListener("submit", function(e) {
             e.preventDefault();
             
-            const usernameInput = document.getElementById("username").value.trim();
+            const usernameInput = document.getElementById("username").value.trim().toLowerCase();
             const passwordInput = document.getElementById("password").value;
 
-            if (usernameInput === "user" && passwordInput === "123") {
+            if (!usernameInput || !passwordInput) return;
+
+            let registeredUsers = JSON.parse(localStorage.getItem("tracker_users"));
+
+            if (registeredUsers[usernameInput] !== undefined) {
+                if (registeredUsers[usernameInput] === passwordInput) {
+                    sessionStorage.setItem("isLoggedIn", "true");
+                    
+                    const formattedUser = usernameInput.charAt(0).toUpperCase() + usernameInput.slice(1);
+                    sessionStorage.setItem("currentUser", formattedUser); 
+                    
+                    window.location.href = "dashboard.html";
+                } else {
+                    alert("Username atau Password salah, bro! Cuba lagi.");
+                }
+            } 
+                
+            else {
+                registeredUsers[usernameInput] = passwordInput;
+                localStorage.setItem("tracker_users", JSON.stringify(registeredUsers));
+
                 sessionStorage.setItem("isLoggedIn", "true");
-                sessionStorage.setItem("currentUser", "User"); 
+                const formattedUser = usernameInput.charAt(0).toUpperCase() + usernameInput.slice(1);
+                sessionStorage.setItem("currentUser", formattedUser); 
+
+                alert("Akaun '" + formattedUser + "' berjaya didaftarkan secara automatik! Membuka dashboard kosong...");
                 window.location.href = "dashboard.html";
-            } else {
-                alert("Username atau Password salah, bro! Cuba lagi.");
             }
         });
     </script>
