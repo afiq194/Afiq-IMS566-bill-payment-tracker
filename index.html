@@ -57,6 +57,16 @@
             color: #64748b;
             margin-bottom: 8px;
         }
+        .register-link {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        .register-link:hover {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -82,10 +92,13 @@
             <button type="submit" class="btn btn-primary-custom w-100 text-white">Log In</button>
             
             <div class="text-center mt-3">
+                <p class="small text-muted mb-2">Don't have an account? <a href="#" id="registerBtn" class="register-link">Register here</a></p>
+            </div>
+            
+            <div class="text-center mt-2">
                 <small style="color: #64748b; font-size: 0.85rem; display: block; line-height: 1.5;">
                     <strong>Demo Access for Evaluation:</strong><br>
-                    Username: <code style="color: #6366f1; font-weight: 600;">user</code> | Password: <code style="color: #6366f1; font-weight: 600;">123</code><br>
-                    <span style="color: #10b981; font-size: 0.78rem; font-weight: 500;">💡 Tip: Type any new username & password to register instantly!</span>
+                    Username: <code style="color: #6366f1; font-weight: 600;">user</code> | Password: <code style="color: #6366f1; font-weight: 600;">123</code>
                 </small>
             </div>
         </form>
@@ -118,9 +131,27 @@
                 } else {
                     alert("Username atau Password salah, bro! Cuba lagi.");
                 }
-            } 
-                
-            else {
+            } else {
+                alert("Akaun tidak wujud, bro! Sila isi Username & Password baru kemudian klik 'Register here'.");
+            }
+        });
+
+        document.getElementById("registerBtn").addEventListener("click", function(e) {
+            e.preventDefault();
+            
+            const usernameInput = document.getElementById("username").value.trim().toLowerCase();
+            const passwordInput = document.getElementById("password").value;
+
+            if (!usernameInput || !passwordInput) {
+                alert("Sila taip Username dan Password yang mu nak reka dalam kotak input dahulu, kemudian baru klik 'Register here'!");
+                return;
+            }
+
+            let registeredUsers = JSON.parse(localStorage.getItem("tracker_users"));
+
+            if (registeredUsers[usernameInput] !== undefined) {
+                alert("Username ini sudah didaftarkan! Sila guna nama lain atau terus tekan butang 'Log In'.");
+            } else {
                 registeredUsers[usernameInput] = passwordInput;
                 localStorage.setItem("tracker_users", JSON.stringify(registeredUsers));
 
@@ -128,7 +159,7 @@
                 const formattedUser = usernameInput.charAt(0).toUpperCase() + usernameInput.slice(1);
                 sessionStorage.setItem("currentUser", formattedUser); 
 
-                alert("Akaun '" + formattedUser + "' berjaya didaftarkan secara automatik! Membuka dashboard kosong...");
+                alert("Akaun baru '" + formattedUser + "' berjaya didaftarkan! Membuka dashboard...");
                 window.location.href = "dashboard.html";
             }
         });
