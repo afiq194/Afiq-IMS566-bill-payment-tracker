@@ -73,7 +73,6 @@
 
     <div class="login-card">
         <div class="text-center mb-4">
-
             <h1 class="fw-bold text-dark mb-2" style="font-size: 32px; letter-spacing: -0.5px;">
                 <i class="fa-solid fa-wallet me-2" style="color: #6366f1;"></i>Bill Payment Tracker
             </h1>
@@ -129,10 +128,10 @@
                     
                     window.location.href = "dashboard.html";
                 } else {
-                    alert("Username atau Password salah, bro! Cuba lagi.");
+                    alert("Invalid username or password! Please try again.");
                 }
             } else {
-                alert("Akaun tidak wujud, bro! Sila isi Username & Password baru kemudian klik 'Register here'.");
+                alert("Account does not exist! Please enter a new Username & Password and click 'Register here'.");
             }
         });
 
@@ -143,14 +142,14 @@
             const passwordInput = document.getElementById("password").value;
 
             if (!usernameInput || !passwordInput) {
-                alert("Sila taip Username dan Password yang mu nak reka dalam kotak input dahulu, kemudian baru klik 'Register here'!");
+                alert("Please enter the Username and Password you wish to create in the input fields first, then click 'Register here'!");
                 return;
             }
 
             let registeredUsers = JSON.parse(localStorage.getItem("tracker_users"));
 
             if (registeredUsers[usernameInput] !== undefined) {
-                alert("Username ini sudah didaftarkan! Sila guna nama lain atau terus tekan butang 'Log In'.");
+                alert("This username is already registered! Please use a different name or log in.");
             } else {
                 registeredUsers[usernameInput] = passwordInput;
                 localStorage.setItem("tracker_users", JSON.stringify(registeredUsers));
@@ -159,7 +158,7 @@
                 const formattedUser = usernameInput.charAt(0).toUpperCase() + usernameInput.slice(1);
                 sessionStorage.setItem("currentUser", formattedUser); 
 
-                alert("Akaun baru '" + formattedUser + "' berjaya didaftarkan! Membuka dashboard...");
+                alert("New account '" + formattedUser + "' has been successfully registered! Redirecting to dashboard...");
                 window.location.href = "dashboard.html";
             }
         });
