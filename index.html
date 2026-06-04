@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Bill Payment Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -61,7 +63,10 @@
 
     <div class="login-card">
         <div class="text-center mb-4">
-            <h1 class="fw-bold text-dark mb-2" style="font-size: 32px; letter-spacing: -0.5px;">Bill Payment Tracker</h1>
+
+            <h1 class="fw-bold text-dark mb-2" style="font-size: 32px; letter-spacing: -0.5px;">
+                <i class="fa-solid fa-wallet me-2" style="color: #6366f1;"></i>Bill Payment Tracker
+            </h1>
             <p class="text-muted small">Log in to manage your personal statements</p>
         </div>
 
@@ -79,7 +84,7 @@
             <div class="text-center mt-3">
                 <small style="color: #64748b; font-size: 0.85rem; display: block; line-height: 1.5;">
                     <strong>Demo Access for Evaluation:</strong><br>
-                    Username: <code style="color: #6366f1; font-weight: 600;">afiq</code> | Password: <code style="color: #6366f1; font-weight: 600;">1</code>
+                    Username: <code style="color: #6366f1; font-weight: 600;">user</code> | Password: <code style="color: #6366f1; font-weight: 600;">123</code>
                 </small>
             </div>
         </form>
@@ -92,9 +97,9 @@
             const usernameInput = document.getElementById("username").value.trim();
             const passwordInput = document.getElementById("password").value;
 
-            if (usernameInput === "afiq" && passwordInput === "1") {
+            if (usernameInput === "user" && passwordInput === "123") {
                 sessionStorage.setItem("isLoggedIn", "true");
-                sessionStorage.setItem("currentUser", "Afiq"); 
+                sessionStorage.setItem("currentUser", "User"); 
                 window.location.href = "dashboard.html";
             } else {
                 alert("Username atau Password salah, bro! Cuba lagi.");
