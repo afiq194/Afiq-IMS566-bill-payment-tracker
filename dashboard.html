@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; }
+        .content-wrapper { flex: 1; }
         .navbar-custom { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; }
         .navbar-custom .navbar-brand { color: #0f172a; font-weight: 700; }
         .navbar-custom .nav-link { color: #64748b; font-weight: 500; }
@@ -25,6 +26,8 @@
         
         .chart-card { border-radius: 24px; border: none; background-color: #ffffff; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); h-100; }
         .chart-container { position: relative; width: 100%; height: 360px; display: flex; justify-content: center; align-items: center; }
+        
+        footer { background-color: #ffffff; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -36,100 +39,111 @@
         }
     </script>
 
-    <nav class="navbar navbar-expand-lg navbar-custom py-3 mb-5 shadow-sm">
+    <div class="content-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-custom py-3 mb-5 shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+                    <i class="fa-solid fa-wallet me-2" style="color: #6366f1;"></i>Bill Payment Tracker
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto gap-2">
+                        <li class="nav-item"><a class="nav-link active" href="dashboard.html"><i class="fa-solid fa-chart-pie me-1"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="bills-list.html"><i class="fa-solid fa-wallet me-1"></i> My Bills</a></li>
+                        <li class="nav-item"><a class="nav-link" href="categories.html"><i class="fa-solid fa-layer-group me-1"></i> Categories</a></li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-danger btn-sm rounded-3 px-3 ms-lg-3" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Logout</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
-                Bill Payment Tracker
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto gap-2">
-                    <li class="nav-item"><a class="nav-link active" href="dashboard.html"><i class="fa-solid fa-chart-pie me-1"></i> Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="bills-list.html"><i class="fa-solid fa-wallet me-1"></i> My Bills</a></li>
-                    <li class="nav-item"><a class="nav-link" href="categories.html"><i class="fa-solid fa-layer-group me-1"></i> Categories</a></li>
-                    <li class="nav-item">
-                        <button class="btn btn-outline-danger btn-sm rounded-3 px-3 ms-lg-3" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Logout</button>
-                    </li>
-                </ul>
+            <div class="row mb-5 align-items-center">
+                <div class="col-md-6">
+                    <h1 class="fw-bold mb-1" id="welcomeMessage">Welcome Back, User!</h1>
+                    <p class="text-muted mb-0">Dynamic analytics generated straight from client storage.</p>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex flex-wrap justify-content-md-end align-items-center gap-3">
+                    <a href="add-new-bill.html" class="btn btn-add-bill shadow-sm"><i class="fa-solid fa-plus"></i> Add New Bill</a>
+                    
+                    <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="dashboardPeriodFilter" onchange="calculateDashboardMetrics()">
+                        <option value="annual" selected>Annual Summary (Jan-June 2026)</option>
+                        <option value="current">Current Month (June 2026)</option>
+                        <option value="May">May 2026</option>
+                        <option value="previous">April 2026</option>
+                        <option value="Mar">March 2026</option>
+                        <option value="Feb">February 2026</option>
+                        <option value="Jan">January 2026</option>
+                    </select>
+                </div>
             </div>
-        </div>
-    </nav>
 
-    <div class="container">
-        <div class="row mb-5 align-items-center">
-            <div class="col-md-6">
-                <h1 class="fw-bold mb-1">Welcome Back, Afiq!</h1>
-                <p class="text-muted mb-0">Dynamic analytics generated straight from client storage.</p>
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="metric-card bg-paid shadow-sm">
+                        <p class="text-uppercase small fw-bold text-white-50 mb-1">Total Paid</p>
+                        <h2 class="fw-bold mb-0" id="dashPaid">RM 0.00</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-card bg-pending shadow-sm">
+                        <p class="text-uppercase small fw-bold text-white-50 mb-1">Total Pending</p>
+                        <h2 class="fw-bold mb-0" id="dashPending">RM 0.00</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-card bg-overdue shadow-sm">
+                        <p class="text-uppercase small fw-bold text-white-50 mb-1">Total Overdue</p>
+                        <h2 class="fw-bold mb-0" id="dashOverdue">RM 0.00</h2>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex flex-wrap justify-content-md-end align-items-center gap-3">
-                <a href="add-new-bill.html" class="btn btn-add-bill shadow-sm"><i class="fa-solid fa-plus"></i> Add New Bill</a>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="chart-card shadow-sm h-100">
+                        <h5 class="fw-bold mb-3" style="font-size: 16px;">Status Breakdown</h5>
+                        <div class="chart-container">
+                            <canvas id="breakdownChart"></canvas>
+                        </div>
+                    </div>
+                </div>
                 
-                <select class="form-select d-inline-block w-auto rounded-3 shadow-sm" id="dashboardPeriodFilter" onchange="calculateDashboardMetrics()">
-                    <option value="annual" selected>Annual Summary (Jan-June 2026)</option>
-                    <option value="current">Current Month (June 2026)</option>
-                    <option value="May">May 2026</option>
-                    <option value="previous">April 2026</option>
-                    <option value="Mar">March 2026</option>
-                    <option value="Feb">February 2026</option>
-                    <option value="Jan">January 2026</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row g-4 mb-5">
-            <div class="col-md-4">
-                <div class="metric-card bg-paid shadow-sm">
-                    <p class="text-uppercase small fw-bold text-white-50 mb-1">Total Paid</p>
-                    <h2 class="fw-bold mb-0" id="dashPaid">RM 0.00</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="metric-card bg-pending shadow-sm">
-                    <p class="text-uppercase small fw-bold text-white-50 mb-1">Total Pending</p>
-                    <h2 class="fw-bold mb-0" id="dashPending">RM 0.00</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="metric-card bg-overdue shadow-sm">
-                    <p class="text-uppercase small fw-bold text-white-50 mb-1">Total Overdue</p>
-                    <h2 class="fw-bold mb-0" id="dashOverdue">RM 0.00</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="row g-4 mb-5">
-            <div class="col-md-4">
-                <div class="chart-card shadow-sm h-100">
-                    <h5 class="fw-bold mb-3" style="font-size: 16px;">Status Breakdown</h5>
-                    <div class="chart-container">
-                        <canvas id="breakdownChart"></canvas>
+                <div class="col-md-4">
+                    <div class="chart-card shadow-sm h-100">
+                        <h5 class="fw-bold mb-3" style="font-size: 16px;">Monthly Bill Trend</h5>
+                        <div class="chart-container">
+                            <canvas id="trendChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="chart-card shadow-sm h-100">
-                    <h5 class="fw-bold mb-3" style="font-size: 16px;">Monthly Bill Trend</h5>
-                    <div class="chart-container">
-                        <canvas id="trendChart"></canvas>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-4">
-                <div class="chart-card shadow-sm h-100">
-                    <h5 class="fw-bold mb-3" style="font-size: 16px;">Top 5 Most Expensive Bills</h5>
-                    <div class="chart-container">
-                        <canvas id="topBillsChart"></canvas>
+                <div class="col-md-4">
+                    <div class="chart-card shadow-sm h-100">
+                        <h5 class="fw-bold mb-3" style="font-size: 16px;">Top 5 Most Expensive Bills</h5>
+                        <div class="chart-container">
+                            <canvas id="topBillsChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer class="py-4 text-center mt-auto">
+        <div class="container">
+            <span class="text-muted">&copy; 2026 Muhamad Afiq Afnan. All Rights Reserved.</span>
+        </div>
+    </footer>
+
     <script>
+        const currentUser = sessionStorage.getItem("currentUser") || "User";
+        document.getElementById("welcomeMessage").innerText = `Welcome Back, ${currentUser}!`;
+
         let breakdownChartInstance = null;
         let trendChartInstance = null;
         let topBillsChartInstance = null;
