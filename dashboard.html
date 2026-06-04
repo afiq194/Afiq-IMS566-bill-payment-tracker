@@ -223,17 +223,19 @@
 
             bills.forEach(bill => {
                 let bAmount = parseFloat(bill.amount || bill.billAmount) || 0;
-                let bStatus = bill.status || "Paid";
+                let bStatus = bill.status || bill.billStatus || "Paid";
                 let bPeriod = bill.period || "current";
+                let bDate = bill.date || bill.billDate || "";
 
                 let pLower = bPeriod.toLowerCase();
                 let monthKey = "";
-                if (pLower === "jan" || pLower.includes("-01")) monthKey = "Jan";
-                else if (pLower === "feb" || pLower.includes("-02")) monthKey = "Feb";
-                else if (pLower === "mar" || pLower.includes("-03")) monthKey = "Mar";
-                else if (pLower === "previous" || pLower.includes("april") || pLower.includes("apr") || pLower.includes("-04")) monthKey = "Apr";
-                else if (pLower === "may" || pLower.includes("-05")) monthKey = "May";
-                else if (pLower === "current" || pLower.includes("june") || pLower.includes("jun") || pLower.includes("-06")) monthKey = "June"; 
+                
+                if (pLower === "jan" || bDate.includes("-01-") || bDate.includes("/01/") || bDate.startsWith("Jan")) monthKey = "Jan";
+                else if (pLower === "feb" || bDate.includes("-02-") || bDate.includes("/02/") || bDate.startsWith("Feb")) monthKey = "Feb";
+                else if (pLower === "mar" || bDate.includes("-03-") || bDate.includes("/03/") || bDate.startsWith("Mar")) monthKey = "Mar";
+                else if (pLower === "previous" || pLower === "apr" || bDate.includes("-04-") || bDate.includes("/04/") || bDate.startsWith("Apr")) monthKey = "Apr";
+                else if (pLower === "may" || bDate.includes("-05-") || bDate.includes("/05/") || bDate.startsWith("May")) monthKey = "May";
+                else if (pLower === "current" || pLower === "june" || pLower === "jun" || bDate.includes("-06-") || bDate.includes("/06/") || bDate.startsWith("Jun") || bDate.startsWith("June")) monthKey = "June"; 
 
                 if (monthKey) {
                     trendData[monthKey] += bAmount;
@@ -244,18 +246,19 @@
                     shouldInclude = true;
                 } else {
                     const s = selectedPeriod.toLowerCase();
-                    if (s === "may" && (pLower === "may" || pLower.includes("-05"))) shouldInclude = true;
-                    else if (s === "current" && (pLower === "current" || pLower === "june" || pLower === "jun" || pLower.includes("-06"))) shouldInclude = true;
-                    else if (s === "previous" && (pLower === "previous" || pLower === "april" || pLower === "apr" || pLower.includes("-04"))) shouldInclude = true;
-                    else if (s === "mar" && (pLower.includes("mar") || pLower.includes("-03"))) shouldInclude = true;
-                    else if (s === "feb" && (pLower.includes("feb") || pLower.includes("-02"))) shouldInclude = true;
-                    else if (s === "jan" && (pLower.includes("jan") || pLower.includes("-01"))) shouldInclude = true;
+                    if (s === "jan" && monthKey === "Jan") shouldInclude = true;
+                    else if (s === "feb" && monthKey === "Feb") shouldInclude = true;
+                    else if (s === "mar" && monthKey === "Mar") shouldInclude = true;
+                    else if (s === "previous" && monthKey === "Apr") shouldInclude = true;
+                    else if (s === "may" && monthKey === "May") shouldInclude = true;
+                    else if (s === "current" && monthKey === "June") shouldInclude = true;
                 }
                 
                 if (shouldInclude) {
-                    if (bStatus === "Paid") totalPaid += bAmount;
-                    if (bStatus === "Pending") totalPending += bAmount;
-                    if (bStatus === "Overdue") totalOverdue += bAmount;
+                    let statusLower = bStatus.toLowerCase();
+                    if (statusLower === "paid") totalPaid += bAmount;
+                    if (statusLower === "pending") totalPending += bAmount;
+                    if (statusLower === "overdue") totalOverdue += bAmount;
                     
                     filteredBillsForTop.push(bill);
                 }
@@ -272,12 +275,17 @@
             const ctxBreakdown = document.getElementById('breakdownChart').getContext('2d');
             if (breakdownChartInstance) breakdownChartInstance.destroy();
             
+            let chartDataValues = [paid, pending, overdue];
+            if (paid === 0 && pending === 0 && overdue === 0) {
+                chartDataValues = [0.0001, 0.0001, 0.0001]; 
+            }
+
             breakdownChartInstance = new Chart(ctxBreakdown, {
                 type: 'doughnut',
                 data: {
                     labels: ['Paid (RM)', 'Pending (RM)', 'Overdue (RM)'],
                     datasets: [{
-                        data: [paid, pending, overdue],
+                        data: chartDataValues,
                         backgroundColor: ['#6366f1', '#f59e0b', '#f43f5e'],
                         borderWidth: 4,
                         borderColor: '#ffffff'
@@ -320,9 +328,10 @@
 
             let uniqueBills = {};
             filteredBills.forEach(b => {
+                let bName = b.name || b.billName || "Unknown Bill";
                 let amt = parseFloat(b.amount || b.billAmount) || 0;
-                if (!uniqueBills[b.name] || uniqueBills[b.name] < amt) {
-                    uniqueBills[b.name] = amt;
+                if (!uniqueBills[bName] || uniqueBills[bName] < amt) {
+                    uniqueBills[bName] = amt;
                 }
             });
 
