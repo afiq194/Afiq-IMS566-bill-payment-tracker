@@ -87,8 +87,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-
         let categoryChartInstance = null;
+
+        function getUserBillsKey() {
+            const currentUser = sessionStorage.getItem("currentUser") || "User";
+            return `storedBills_${currentUser.toLowerCase()}`;
+        }
 
         function toggleSection(collapseId, buttonElement) {
             const target = document.getElementById(collapseId);
@@ -96,13 +100,15 @@
                 target.classList.remove('show');
                 buttonElement.classList.add('collapsed');
             } else {
+                target.add(collapseId);
                 target.classList.add('show');
                 buttonElement.classList.remove('collapsed');
             }
         }
 
         function generateDynamicCategories() {
-            const bills = JSON.parse(localStorage.getItem("storedBills")) || [];
+            const userBillsKey = getUserBillsKey();
+            const bills = JSON.parse(localStorage.getItem(userBillsKey)) || [];
             const accordionContainer = document.getElementById("categoryAccordion");
             accordionContainer.innerHTML = ""; 
 
@@ -112,7 +118,7 @@
             const categorySpending = {};
 
             bills.forEach(bill => {
-                let rawProvider = (bill.provider || "").trim();
+                let rawProvider = (bill.provider || bill.category || "").trim();
                 let detectedCategory = "Uncategorized";
 
                 if (rawProvider.includes("/")) {
@@ -129,14 +135,16 @@
                 let bAmount = parseFloat(bill.amount || bill.billAmount) || 0;
                 categorySpending[detectedCategory] = (categorySpending[detectedCategory] || 0) + bAmount;
 
+                let bName = bill.name || bill.billName || "New Bill";
+
                 if (!mappedCategories[detectedCategory]) {
                     mappedCategories[detectedCategory] = [];
                     uniqueBillTracker[detectedCategory] = new Set();
                 }
 
-                if (!uniqueBillTracker[detectedCategory].has(bill.name)) {
-                    uniqueBillTracker[detectedCategory].add(bill.name);
-                    mappedCategories[detectedCategory].push(bill);
+                if (!uniqueBillTracker[detectedCategory].has(bName)) {
+                    uniqueBillTracker[detectedCategory].add(bName);
+                    mappedCategories[detectedCategory].push({ name: bName });
                 }
             });
 
